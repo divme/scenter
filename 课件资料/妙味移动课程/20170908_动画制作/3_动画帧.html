@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+.box {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100px;
+	height: 100px;
+	background: red;
+}	
+</style>
+</head>
+<body>
+<div class="box"></div>
+<!--
+//css 动画	
+// 定时器
+// 16.7毫秒 屏幕的渲染频率 
+// requestAnimationFrame 动画帧 1s = 60帧
+-->
+<script type="text/javascript" src="js/miaov.touch.js"></script>
+<script type="text/javascript">
+(function(){
+	window.requestAnimationFrame = window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame;
+	window.cancelAnimationFrame = window.cancelAnimationFrame|| window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame||window.cancelRequestAnimationFrame||window.webkitCancelRequestAnimationFrame||window.mozCancelRequestAnimationFrame; 
+})();
+	//window.requestAnimationFrame(callback);	
+(function(){
+	var box = document.querySelector('.box');
+	var timer = 0;
+	var nub = 0;
+	console.time(nub);
+	//console.time(nub);
+	css(box,"translateX",0);
+	timer = requestAnimationFrame(move);
+	/*
+		requestAnimationFrame 调用一下 只走一次，类似于setTimeout
+		参数：动画的回调函数
+		返回值：index 动画帧编号
+
+		cancelAnimationFrame(index)
+		清除动画
+	*/
+	function move(){
+		var x = css(box,"translateX");
+		if(x >= 600){
+			//clearInterval(timer);
+			cancelAnimationFrame(timer);
+		} else {
+			x += 10;
+			css(box,"translateX",x);
+			timer = requestAnimationFrame(move);
+		}
+		console.timeEnd(nub);
+		nub++;
+		console.time(nub);
+	}
+})();	
+</script>
+</body>
+</html>

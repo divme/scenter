@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片转base64编码功能</title>
+    <style> #base64 {
+        font-size: 12px;
+        word-break: break-all;
+    } </style>
+</head>
+<body><input type="file" onchange="getFile(this)"/> <img id="preview" alt="预览图片" width="200px;"/>
+<p id="base64" onclick="aaa()">ewqewq</p>
+<!--<iframe src="seaJs/index.html" frameborder="0"></iframe>-->
+<iframe src="seaJs/index.html" frameborder="0"></iframe>
+<iframe src="https://divme.github.io/onmyway/canvas/17.%E8%B4%9D%E5%A1%9E%E5%B0%94%E6%9B%B2%E7%BA%BF%E7%94%9F%E6%88%90%E5%99%A8" frameborder="0"></iframe>
+<script>
+    function aaa(){
+//        window.location = window.location + '#dd=dd';
+//        window.name = 'iloveu'
+        window.frames[0].postMessage('father0', '*')
+        window.frames[1].postMessage('father', '*')
+//        window.postMessage('father','*')
+    }
+    window.onhashchange = function(){
+        alert('change')
+    };
+    window.addEventListener('message',function(e){
+        alert('from father'+e.data)
+    });
+
+    
+    function getFile(source) {
+    if (window.FileReader) {
+        var oFileReader = new FileReader(), oFile = source.files[0], oBase64 = document.getElementById("base64"), oPreview = document.getElementById("preview");
+        /* 过滤非图片文件*/
+        if (/^image*/.test(oFile.type)) {
+            oFileReader.onloadend = function (e) {
+                oBase64.innerHTML = e.target.result;
+                oPreview.src = e.target.result;
+            };
+            /* 将图片转为base64格式*/
+            oFileReader.readAsDataURL(oFile);
+        }
+        oBase64.innerHTML = "请选择图片文件!";
+        oPreview.src = "";
+    } else {
+        oBase64.innerHTML = "您当前使用的浏览器不支持读取文件功能";
+    }
+}
+</script>
+</body>
+</html>

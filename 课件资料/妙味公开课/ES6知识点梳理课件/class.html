@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			
+
+
+
+		</script>
+	</head>
+
+	<body>
+		<ul>
+			<li>123</li>
+			<li>123</li>
+			<li>123</li>
+			<li>123</li>
+		</ul>
+		<script>
+
+			
+			class miaov {
+				constructor(){
+					this.a = 10;
+				}
+
+				func(){
+					console.log("共享的方法");
+				}
+			}
+
+			let m = new miaov();
+
+			console.log(m);
+
+			class ketang extends miaov {
+				constructor(){
+					super();
+				}
+			}
+
+			new ketang()
+
+			// 作为构造函数
+			function func(){
+				if(new.target){
+					this.abc = 10;
+				}
+
+				console.log(new.target);
+					
+			}
+
+			new func();
+
+
+
+		</script>
+	</body>
+</html>

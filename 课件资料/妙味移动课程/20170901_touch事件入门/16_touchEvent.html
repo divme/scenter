@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+#box {
+	width: 200px;
+	height: 200px;
+	background: red;
+	color: #fff;
+	font-size: 20px;
+}	
+</style>
+</head>
+<body>
+<!--
+	处理滑屏误触最直白的办法莫过于自定义tap事件
+-->
+<div class="page">
+	<div id="box"></div>
+</div>	
+<script type="text/javascript">
+/*
+	touchEvent:
+		touches 当前屏幕上的手指列表
+		targetTouches 当前元素上的手指列表
+		changedTouches 触发当前事件的手指列表
+	clientX 和 clientY 手指相对于可视区的一个坐标
+	pageX 和 pageY 手指相对于页面的一个坐标	
+*/
+var page = document.querySelector('.page');
+page.addEventListener('touchstart', function(e) {
+	e.preventDefault();
+});
+var box = document.querySelector('#box');
+box.addEventListener('touchstart', function(e) {
+	console.log(e.touches[0]);
+});
+</script>	
+</body>
+</html>

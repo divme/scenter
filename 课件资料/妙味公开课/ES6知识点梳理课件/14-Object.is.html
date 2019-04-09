@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			
+
+
+
+		</script>
+	</head>
+
+	<body>
+		<ul>
+			<li>123</li>
+			<li>123</li>
+			<li>123</li>
+			<li>123</li>
+		</ul>
+		<script>
+
+			
+			/*console.log( Object.is(1,1) );
+			console.log( Object.is(2,1) );
+			console.log( Object.is(NaN,NaN) );
+
+			let newObj = Object.assign({},{a:1},{b:2});
+
+			console.log(newObj);
+
+
+			let obj = {
+				a:1
+			}
+
+			obj.b = 20;
+
+			Object.defineProperty(obj, 'miaov', {
+				value: 'ketang',
+				writable: false
+			})
+
+			obj.miaov = '123'
+
+			console.log(obj);*/
+
+			let obj3 = {b:2};
+			Object.defineProperty(obj3, 'miaov', {
+				value: 'ketang',
+				writable: false,
+				enumerable: true
+			})
+
+			console.log(Object.getOwnPropertyDescriptor(obj3, "miaov"));
+
+			let newObj2 = Object.assign({},{a:1},obj3);
+
+			console.log(newObj2);
+
+
+		</script>
+	</body>
+</html>

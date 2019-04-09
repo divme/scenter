@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			// 出现的单词：变量 关键字 函数名字
+			var obj = {
+				a:1
+			};
+
+			console.log(obj.a)
+			//console.log(obj[a]); // a解析为变量
+			console.log(obj["a"])
+
+			// 什么时候必须用中括号
+			/*
+				1. 属性名存在了变量中
+				2. 属性名不符合变量的命名规则
+			*/
+			var attr = 'a';
+			// attr必须是对象自身的属性
+			console.log(obj.attr);  // undefined
+			console.log(obj[attr]);  // 1
+
+
+		</script>
+	</head>
+
+	<body>
+		<div id="box">妙味课堂</div>
+		<script>
+			var box = document.getElementById("box");
+
+			box.style['font-size'] = '50px';
+
+		</script>
+	</body>
+</html>

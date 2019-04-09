@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+body {
+	margin: 0;
+	background: #ccc;
+}	
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+img {
+	vertical-align: top;
+}
+body,
+html {
+	height: 100%;
+}
+.page {
+	height: 100%;
+	overflow: hidden;
+}
+.wrap {
+	position: relative;
+	overflow: hidden;
+}
+.list {
+	overflow: hidden;
+}
+.list li {
+	float: left;
+}
+.list img {
+	width: 100%;
+}
+.nav {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	text-align: center;
+	height: 10px;
+}
+.nav a {
+	vertical-align: top;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background: #fff;
+}
+.nav .focus {
+	background: #6f0;
+}
+.textList li {
+	font: 16px/34px "宋体";
+	border-bottom: 1px solid #000;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div class="scroll">
+		<div class="wrap">
+			<ul class="list">
+				<li>
+					<a href="#">
+						<img src="img/1.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/2.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/3.jpg">
+					</a>
+				</li>
+			</ul>
+			<nav class="nav">
+				<a href="javascript:;" class="focus"></a>
+				<a href="javascript:;"></a>
+				<a href="javascript:;"></a>
+			</nav>
+		</div>	
+		<ul class="textList"></ul>
+	</div>	
+</div>
+<script type="text/javascript" src="js/tween.js"></script>
+<script type="text/javascript" src="js/miaov.move.js"></script>
+<script type="text/javascript" src="js/miaov.touch.js"></script>
+<script type="text/javascript">
+/* 列表的内容添加 */
+(function(){
+	var page = document.querySelector('.page');
+	var list = document.querySelector('.textList');
+	var inner = "";
+	for(var i = 0; i < 50; i++){
+		inner += "<li>这是第"+i+"个li</li>"
+	}
+	list.innerHTML = inner;
+	swiper({
+		wrap: page,
+		dir: "y"
+	});
+})();
+/* 布局设置 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	list.innerHTML += list.innerHTML;//把整个列表复制一份准备用来 处理无缝 
+	list.style.width = imgs.length * wrap.clientWidth + "px";
+	for(var i = 0; i < imgs.length; i++){
+		imgs[i].style.width = wrap.clientWidth + "px";
+	}
+})();
+/* 幻灯片滑屏 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	var navs = document.querySelectorAll('.nav a');
+	var imgW = wrap.clientWidth;
+	var now = 0;
+	var timer = 0;
+	swiper({
+		wrap: wrap,
+		dir: "x",
+		start: function(){
+			clearInterval(timer);
+			list.style.transition = "none";
+			var nowX = css(list,"translateX");
+			now = Math.round(Math.abs(nowX/imgW));
+			if(now == 0){
+				now = imgs.length/2;
+			} else if (now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+			}		
+			var targetX = -now*imgW	
+			css(list,"translateX",targetX);
+		},
+		end: function(){
+			var nowX = css(list,"translateX");//获取当前移动的距离
+			now = Math.round(Math.abs(nowX/imgW));//根据当前移动的距离 计算出 应该停在第几张
+			var targetX = -now*imgW //根据当前要停在第几张，计算出  移动的距离
+			//console.log(targetX);
+			list.style.transition = ".3s";
+			css(list,"translateX",targetX);
+			for (var i = 0; i < navs.length; i++) {
+				navs[i].className = "";
+			}
+			//console.log(now);
+			navs[now%navs.length].className = "focus";
+			//auto();
+		}
+	});
+	//auto();
+	/* 自动播放 */
+	function auto(){
+		timer = setInterval(function(){
+			/*判断走到最后一张快走过界了,拉到第一组最后一张 */
+			if(now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+				list.style.transition = "none";
+				css(list,"translateX",-now*imgW);
+			}	
+
+
+			/* 走到下一张*/
+			now++;
+			setTimeout(function(){
+				list.style.transition = ".3s";
+				css(list,"translateX",-now*imgW);
+			},50);	
+			for (var i = 0; i < navs.length; i++) {
+					navs[i].className = "";
+			}
+			navs[now%navs.length].className = "focus";
+		},3000);
+	}
+})();
+
+
+
+//根据最后一次拨动块慢来添加我们的距离和快慢
+/*
+	最后一次的速度
+		最后一次的距离/最后一次的时间
+
+	最后一次的距离 = 当前次手指位置 - 上一次手指位置 
+	最后一次的时间 = 当前次的时间 - 上一次的时间	
+
+	v 初速度 a摩擦系数
+	s = v*v/2a;		
+*/
+function swiper(init){
+	var wrap = init.wrap;//滑屏元素的父级
+	var scroll = wrap.children[0];//滑动的元素
+	var startPonit = {};//手指的初始位置
+	var startEl = {};// 元素的初始位置
+	var dir = init.dir;
+	var isFirst = true; //判断用户是否 是第一次执行move;
+	var lastTime = 0;
+	var lastTimeDis = 0;
+	var isDir = { //判断用户在对哪个方向进行滑屏
+		x: false,
+		y: false
+	};
+	var dirTranslate = {
+		x: "translateX",
+		y: "translateY"
+	};
+	var lastPoint = {};
+	var lastDis = 0;//最后一次的手指移动距离
+	css(scroll,"translateX",0);
+	css(scroll,"translateY",0);
+	css(scroll,"translateZ",0);
+	wrap.addEventListener('touchstart', function(e) {
+		init.start&&init.start.call(wrap,e);
+		var touch = e.changedTouches[0];
+		startPonit = {
+			x: touch.pageX,
+			y: touch.pageY
+		};
+		lastPoint = {
+			x: touch.pageX,
+			y: touch.pageY
+		};
+		startEl = {
+			x: css(scroll,"translateX"),
+			y: css(scroll,"translateY")
+		};
+		lastTime = Date.now();
+		lastTimeDis = 0;
+		lastDis = 0;
+	});
+	wrap.addEventListener('touchmove', function(e) {
+		var touch = e.changedTouches[0];
+		var nowTime = Date.now();
+		var nowPonit = {
+			x: touch.pageX,
+			y: touch.pageY
+		};
+		if(lastPoint.x == nowPonit.x
+		&&lastPoint.y == nowPonit.y){
+			return;
+		}
+		var dis = {
+			x: nowPonit.x - startPonit.x,
+			y: nowPonit.y - startPonit.y
+		};
+		if(isFirst){
+			if(Math.abs(dis.x) > Math.abs(dis.y)) {
+				isDir.x = true;
+				isFirst = false;
+			} else {
+				isDir.y = true;
+				isFirst = false;
+			}
+		 }
+		var target = {
+			x: startEl.x + dis.x,
+			y: startEl.y + dis.y
+		};
+		 if(isDir[dir]){ 
+		 	css(scroll,dirTranslate[dir],target[dir]);
+			e.preventDefault();
+			lastDis = nowPonit[dir] - lastPoint[dir];//获取最后一次的距离
+			lastTimeDis = nowTime - lastTime;
+		 }
+		lastPoint.x = nowPonit.x;
+		lastPoint.y = nowPonit.y;
+		lastTime = nowTime;
+	});
+	wrap.addEventListener('touchend', function(e) {
+		init.end&&init.end.call(wrap,e);
+		//console.log(lastDis,lastTimeDis);
+		var lastSpeed = lastDis/lastTimeDis;//最后一次移动速度
+		//console.log(lastSpeed);
+		lastSpeed = lastSpeed?lastSpeed:0;
+		/* 最后一次的速度越大，位移出去的距离越大 */
+		var s = lastSpeed*170;//缓冲出去的距离
+
+		var now = css(scroll,dirTranslate[dir]);
+		s = Math.round(s + now);//目标值
+		if(dir == "x"){
+			var target = {translateX: s}
+		} else {
+			var target = {translateY: s}
+		}
+		startMove({
+			el: scroll,
+			type: "easeOutStrong",
+			time: 500,
+			target: target
+		});
+		isFirst = true;
+		isDir = { 
+			x: false,
+			y: false
+		};
+
+	});
+}
+</script>
+</body>
+</html>

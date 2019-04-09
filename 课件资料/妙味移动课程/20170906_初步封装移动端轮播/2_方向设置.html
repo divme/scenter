@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+body {
+	margin: 0;
+	background: #ccc;
+}	
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+img {
+	vertical-align: top;
+}
+.wrap {
+	position: relative;
+	overflow: hidden;
+}
+.list {
+	overflow: hidden;
+}
+.list li {
+	float: left;
+}
+.list img {
+	width: 100%;
+}
+.nav {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	text-align: center;
+	height: 10px;
+}
+.nav a {
+	vertical-align: top;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background: #fff;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div class="wrap">
+		<ul class="list">
+			<li>
+				<a href="#">
+					<img src="img/1.jpg">
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="img/2.jpg">
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<img src="img/3.jpg">
+				</a>
+			</li>
+		</ul>
+		<nav class="nav">
+			<a href="javascript:;"></a>
+			<a href="javascript:;"></a>
+			<a href="javascript:;"></a>
+		</nav>
+	</div>	
+</div>
+<script type="text/javascript" src="js/miaov.touch.js"></script>
+<script type="text/javascript">
+/* 布局设置 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+
+	list.style.width = imgs.length * wrap.clientWidth + "px";
+	for(var i = 0; i < imgs.length; i++){
+		imgs[i].style.width = wrap.clientWidth + "px";
+	}
+})();
+/* 幻灯片滑屏 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	swiper({
+		wrap: wrap,
+		dir: "x"
+	});
+})();
+
+
+/*滑屏的函数 */
+/*
+配置参数
+init: {
+	wrap: wrap,
+	dir: "x"||"y" 要滑动的方向
+}
+*/
+function swiper(init){
+	var wrap = init.wrap;//滑屏元素的父级
+	var scroll = wrap.children[0];//滑动的元素
+	var startPonit = {};//手指的初始位置
+	var startEl = {};// 元素的初始位置
+	var dir = init.dir;
+	var dirTranslate = {
+		x: "translateX",
+		y: "translateY"
+	};
+	css(scroll,"translateX",0);
+	css(scroll,"translateY",0);
+	css(scroll,"translateZ",0);
+	wrap.addEventListener('touchstart', function(e) {
+		var touch = e.changedTouches[0];
+		startPonit = {
+			x: touch.pageX,
+			y: touch.pageY
+		};
+		startEl = {
+			x: css(scroll,"translateX"),
+			y: css(scroll,"translateY")
+		};
+	});
+	wrap.addEventListener('touchmove', function(e) {
+		var touch = e.changedTouches[0];
+		var nowPonit = {
+			x: touch.pageX,
+			y: touch.pageY
+		};
+		/* 手指 当前值 和 初始值的一个差值 */
+		var dis = {
+			x: nowPonit.x - startPonit.x,
+			y: nowPonit.y - startPonit.y
+		};
+		/* 元素应在要在的一个位置 */
+		var target = {
+			x: startEl.x + dis.x,
+			y: startEl.y + dis.y
+		};
+
+		/* 设置样式 */
+		css(scroll,dirTranslate[dir],target[dir]);
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路由</title>
+    <script src="src/vue.min.js"></script>
+    <script src="src/vue-router.min.js"></script>
+    <style>
+        *{
+            /*margin: 0;*/
+            /*padding: 0;*/
+        }
+        li{
+            list-style: none;
+        }
+        #app{
+            overflow: hidden;
+        }
+        .headname{
+            text-align: center;
+        }
+        .nav{
+            margin: 20px auto;
+            text-align: center;
+        }
+        .content{
+            width: 60%;
+            margin: 10px auto;
+        }
+        .sidebar{
+            float: left;
+            width: 10em;
+            min-height: 100px;
+        }
+        .sidebar li{
+            text-indent: 20px;
+            line-height: 30px;
+            border-bottom: 1px solid #dedede;
+        }
+        .index{
+            margin-left: 10em;
+            text-indent: 10px;
+        }
+        .news li{
+            line-height: 30px;
+        }
+    </style>
+</head>
+<body>
+   <div id="app">
+       <h1 class="headname"> router</h1>
+       <div class="nav">
+           <router-link :to="{path: 'index'}">首页</router-link>
+           <router-link to="/news">新闻</router-link>
+           <router-link to="/test">测试</router-link>
+           <ddd></ddd>
+       </div>
+       <div class="content">
+           <router-view name="a"></router-view>
+           <router-view></router-view>
+       </div>
+   </div>
+
+   <script>
+       var Sidebar = {
+           data:{
+               a: 2
+           },
+           template: '<div class="sidebar">' +
+           '<ul>' +
+               '<li>去哪</li>' +
+               '<li>{{2}}</li>' +
+               '<li>去哪</li>' +
+               '<li>去哪</li>' +
+               '<li>去哪</li>' +
+           '</ul>' +
+           '</div>'
+       };
+       var Index = {template: '<div class="index"><img src="src/bg.jpg" alt=""></div>'};
+       var News = {
+            template: '<transition name="slide-left"><ul class="news">' +
+                            '<li>1. 今天问题疫苗事件得到了习近平主席的批示</li>'+
+                            '<li>2. 今天台风那谁登陆山东，山东大雨</li>'+
+                            '<li>3. 北京也是大雨，听说要两天一夜</li>'+
+                            '<li>4. 惊鸿一瞥，乱我心曲 一约既定，万山无阻</li>'+
+                            '<router-link to="/news1">我是嵌套路由1</router-link>'+
+                            '<router-link to="/news2" style="margin-left: 40px;">嵌套路由2</router-link>'+
+                            '<router-view></router-view>'+
+                        '</ul></transition>'
+       };
+       var News1 = {
+           template:'<h1>我是嵌套路由1 的New1</h1>'
+       };
+       var News2 = {
+           template: '<h1>沈威居老师朱老师面面</h1>'
+       };
+
+       Vue.component('ddd', Index);
+       var routes = [
+           {
+               path: '',
+               component: Sidebar
+
+           },
+           {
+               path: '/index',
+               components: {
+                    default: Index,
+                    a : Sidebar
+               }
+           },
+           {
+               path: '/news',
+               component: News,
+               children:[
+                   {
+                       path: '/news1',
+                       component: News1
+                   },
+                   {
+                       path: '/news2',
+                       component: News2
+                   }
+               ]
+           },
+           {
+               path: '/test',
+               redirect: '/index'
+           }
+       ];
+
+       const router = new VueRouter({
+//           mode: 'history',
+           routes: routes
+       });
+
+       const app = new Vue({
+           router
+       }).$mount('#app');
+
+   </script>
+</body>
+</html>

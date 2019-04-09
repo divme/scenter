@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+body {
+	margin: 0;
+	background: #ccc;
+}	
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+img {
+	vertical-align: top;
+}
+body,
+html {
+	height: 100%;
+}
+.page {
+	height: 100%;
+	overflow: hidden;
+}
+.wrap {
+	position: relative;
+	overflow: hidden;
+}
+.list {
+	overflow: hidden;
+}
+.list li {
+	float: left;
+}
+.list img {
+	width: 100%;
+}
+.nav {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	text-align: center;
+	height: 10px;
+}
+.nav a {
+	vertical-align: top;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background: #fff;
+}
+.nav .focus {
+	background: #6f0;
+}
+.textList li {
+	font: 16px/34px "宋体";
+	border-bottom: 1px solid #000;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div class="scroll">
+		<div class="wrap">
+			<ul class="list">
+				<li>
+					<a href="#">
+						<img src="img/1.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/2.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/3.jpg">
+					</a>
+				</li>
+			</ul>
+			<nav class="nav">
+				<a href="javascript:;" class="focus"></a>
+				<a href="javascript:;"></a>
+				<a href="javascript:;"></a>
+			</nav>
+		</div>	
+		<ul class="textList"></ul>
+	</div>	
+</div>
+<script type="text/javascript" src="js/miaov.touch.js"></script>
+<script type="text/javascript">
+/* 列表的内容添加 */
+(function(){
+	var page = document.querySelector('.page');
+	var list = document.querySelector('.textList');
+	var inner = "";
+	for(var i = 0; i < 50; i++){
+		inner += "<li>这是第"+i+"个li</li>"
+	}
+	list.innerHTML = inner;
+	swiper({
+		wrap: page,
+		dir: "y"
+	});
+})();
+/* 布局设置 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	list.innerHTML += list.innerHTML;//把整个列表复制一份准备用来 处理无缝 
+	list.style.width = imgs.length * wrap.clientWidth + "px";
+	for(var i = 0; i < imgs.length; i++){
+		imgs[i].style.width = wrap.clientWidth + "px";
+	}
+})();
+/* 幻灯片滑屏 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	var navs = document.querySelectorAll('.nav a');
+	var imgW = wrap.clientWidth;
+	var now = 0;
+	var timer = 0;
+	swiper({
+		wrap: wrap,
+		dir: "x",
+		start: function(){
+			clearInterval(timer);
+			list.style.transition = "none";
+			var nowX = css(list,"translateX");
+			now = Math.round(Math.abs(nowX/imgW));
+			if(now == 0){
+				now = imgs.length/2;
+			} else if (now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+			}		
+			var targetX = -now*imgW	
+			css(list,"translateX",targetX);
+		},
+		end: function(){
+			var nowX = css(list,"translateX");//获取当前移动的距离
+			now = Math.round(Math.abs(nowX/imgW));//根据当前移动的距离 计算出 应该停在第几张
+			var targetX = -now*imgW //根据当前要停在第几张，计算出  移动的距离
+			//console.log(targetX);
+			list.style.transition = ".3s";
+			css(list,"translateX",targetX);
+			for (var i = 0; i < navs.length; i++) {
+				navs[i].className = "";
+			}
+			//console.log(now);
+			navs[now%navs.length].className = "focus";
+			//auto();
+		}
+	});
+	//auto();
+	/* 自动播放 */
+	function auto(){
+		timer = setInterval(function(){
+			/*判断走到最后一张快走过界了,拉到第一组最后一张 */
+			if(now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+				list.style.transition = "none";
+				css(list,"translateX",-now*imgW);
+			}	
+
+
+			/* 走到下一张*/
+			now++;
+			setTimeout(function(){
+				list.style.transition = ".3s";
+				css(list,"translateX",-now*imgW);
+			},50);	
+			for (var i = 0; i < navs.length; i++) {
+					navs[i].className = "";
+			}
+			navs[now%navs.length].className = "focus";
+		},3000);
+	}
+})();
+
+
+/*滑屏的函数 */
+/*
+配置参数
+init: {
+	wrap: wrap,
+	dir: "x"||"y", 要滑动的方向
+	start: function(){}, 手指摁下时的回调
+	end: function(){} 手指抬起之后的回调
+}
+*/
+function swiper(init){
+	var wrap = init.wrap;//滑屏元素的父级
+	var scroll = wrap.children[0];//滑动的元素
+	var startPonit = {};//手指的初始位置
+	var startEl = {};// 元素的初始位置
+	var dir = init.dir;
+	var isFirst = true; //判断用户是否 是第一次执行move;
+	var isDir = { //判断用户在对哪个方向进行滑屏
+		x: false,
+		y: false
+	};
+	var dirTranslate = {
+		x: "translateX",
+		y: "translateY"
+	};
+	var lastPoint = {}; //上一次的手指坐标
+
+	css(scroll,"translateX",0);
+	css(scroll,"translateY",0);
+	css(scroll,"translateZ",0);
+	//安卓下大面积触摸会引发touchmove的问题
+	wrap.addEventListener('touchstart', function(e) {
+		init.start&&init.start.call(wrap,e);
+		var touch = e.changedTouches[0];
+		startPonit = {
+			x: touch.pageX,
+			y: touch.pageY
+		};
+		lastPoint = {
+			x: touch.pageX,
+			y: touch.pageY
+		}
+		startEl = {
+			x: css(scroll,"translateX"),
+			y: css(scroll,"translateY")
+		};
+	});
+	wrap.addEventListener('touchmove', function(e) {
+		var touch = e.changedTouches[0];
+		var nowPonit = {
+			x: touch.pageX,
+			y: touch.pageY
+		};
+		if(lastPoint.x == nowPonit.x
+		&&lastPoint.y == nowPonit.y){//上一次坐标 和 这次坐标完全一致，我就不做任何处理
+			return;
+		}
+		/* 手指 当前值 和 初始值的一个差值 */
+		var dis = {
+			x: nowPonit.x - startPonit.x,
+			y: nowPonit.y - startPonit.y
+		};
+		 if(isFirst){
+			if(Math.abs(dis.x) > Math.abs(dis.y)) {
+				//横向滑屏
+				isDir.x = true;
+				isFirst = false;
+			} else {
+				//纵向滑屏 
+				isDir.y = true;
+				isFirst = false;
+			}
+		 }
+		//console.log(isDir);
+		/* 元素应在要在的一个位置 */
+		var target = {
+			x: startEl.x + dis.x,
+			y: startEl.y + dis.y
+		};
+		// /* 设置样式 */
+		 if(isDir[dir]){ 
+		 	//用户如果滑屏方向和我们要求一致的时候
+		 	css(scroll,dirTranslate[dir],target[dir]);
+			e.preventDefault();
+		 }
+		lastPoint.x = nowPonit.x;
+		lastPoint.y = nowPonit.y;
+	});
+	wrap.addEventListener('touchend', function(e) {
+		init.end&&init.end.call(wrap,e);
+		isFirst = true;
+		isDir = { 
+			x: false,
+			y: false
+		}
+	});
+}
+</script>
+</body>
+</html>

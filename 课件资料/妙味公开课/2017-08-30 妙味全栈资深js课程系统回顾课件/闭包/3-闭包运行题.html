@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			ul li {
+				list-style: none;
+				background: pink;
+				margin: 20px;
+			}
+		</style>
+		<script>
+			
+			
+
+		</script>
+	</head>
+
+	<body>
+		<input type="button" id="btn" value="给所有li绑定事件" />
+		<hr />
+		<ul id="list">
+			<li>妙味课堂1</li>
+			<li>妙味课堂1</li>
+			<li>妙味课堂1</li>
+			<li>妙味课堂1</li>
+			<li>妙味课堂1</li>
+		</ul>
+		<script>
+			var btn = document.getElementById('btn');
+			var list = document.getElementById('list');
+			var lis = list.querySelectorAll('li');
+			var n = 0;
+			btn.onclick = function (){
+				n++;
+				for( var i = 0; i < lis.length; i++ ){
+					fn(i,n)		
+				}	
+			}
+
+			function fn(i,n){
+				lis[i].addEventListener('click',function (){
+					console.log(n);	
+				})
+			}
+
+		</script>
+	</body>
+</html>

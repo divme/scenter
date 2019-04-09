@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+</head>
+<body>
+<input type="file" id="file" accept="image/*" name="">
+<script type="text/javascript">
+(function(){
+	var file = document.querySelector('#file');
+	file.onchange = function(){
+		console.log(this.files[0]);
+	};
+})();
+</script>
+</body>
+</html>

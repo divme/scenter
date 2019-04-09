@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<title>Document</title>
+<style type="text/css">
+	input {
+		width: 90%;
+		height: 50px;
+	}
+</style>
+</head>
+<body>
+<div class="page">
+<img src="img/img.jpg" />
+<input type="text" name="">
+<ul class="list">
+</ul>
+</div>	
+<script type="text/javascript">
+var inner = "";
+var list = document.querySelector('.list');
+var input = document.querySelector('input');
+for(var i = 0; i < 50; i++){
+	inner += '<li><a href="http://www.miaov.com">这是第'+i+"个li</li>";
+}	
+list.innerHTML = inner;
+
+
+var page = document.querySelector('.page');
+page.addEventListener('touchstart', function(e) {
+	e.preventDefault();
+});
+
+var a = list.querySelectorAll('a');
+for(var i = 0; i < a.length; i++){
+	a[i].addEventListener('touchend', function(e) {
+		//console.log(this.href);
+		window.location.href = this.href;
+		/* touch误触 滑屏误触 */
+	});
+}
+</script>
+</body>
+</html>

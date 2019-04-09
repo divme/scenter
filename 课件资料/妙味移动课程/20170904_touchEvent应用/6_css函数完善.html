@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+html,
+body {
+	margin: 0;
+	height: 100%;
+}
+.page {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+#box {
+	width: 100px;
+	height: 100px;
+	background: red;
+	transition: .3s;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div id="box"></div>
+</div>	
+<script type="text/javascript">
+/* 页面结构 */
+// 获取或者设置元素的样式
+// top left width height marginLeft……
+// opacity
+(function(){
+	var box = document.querySelector('#box');
+	tap(box,function(){
+		var opacity = css(box,"opacity");
+		if(opacity == 1){
+			css(box,"opacity",.1);
+		} else {
+			css(box,"opacity",1);
+		}
+	});
+})();
+function tap(el,fn){
+	var startPoint = {};
+	el.addEventListener('touchstart', function(e) {
+		startPoint = {
+			x: e.changedTouches[0].pageX,
+			y: e.changedTouches[0].pageY
+		}
+	});
+	el.addEventListener('touchend', function(e) {
+		var nowPoint = {
+			x: e.changedTouches[0].pageX,
+			y: e.changedTouches[0].pageY
+		}
+		if(Math.abs(nowPoint.x - startPoint.x) < 5
+		&&Math.abs(nowPoint.y - startPoint.y) < 5){
+			fn&&fn.call(el,e);
+		}
+	});
+}
+function css(el,attr,val){
+	if(val === undefined){ //当val为空的时候，就是获取样式
+		val = getComputedStyle(el)[attr];
+		val = parseFloat(val);
+		return val;
+	}
+	//el.style[attr] = val + "px";
+	if(attr == "opacity"){
+		el.style[attr] = val;
+	} else {
+		el.style[attr] = val + "px";
+	}
+}
+</script>
+</body>
+</html>

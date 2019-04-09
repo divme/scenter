@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+    <script src="./data.js"></script>
+</head>
+
+<body>
+    <div class="main">
+        <a href="http://www.miaov.com" class="logo"></a>
+        <div class="tree">
+            <!-- <ul>
+                <li>
+                	<span class="add">第一级菜单</span>
+                    <ul>
+                        <li><span>第二集菜单</span></li>
+                    </ul>
+                </li>
+                <li>
+                	<span class="add">第一级菜单</span>
+                </li>
+                <li><span class="add">第一集菜单</span>
+                    <ul>
+                        <li><span>第二集菜单</span></li>
+                        <li><span>第二集菜单</span></li>
+                        <li><span class="add">第二集菜单</span>
+                            <ul>
+                                <li><span>第三集菜单</span></li>
+                                <li><span>第三集菜单</span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul> -->
+        </div>
+    </div>
+    <script>
+    // 找到指定id的子数据
+        function getChildsById(id){
+            var arr = [];
+            for(var i = 0; i < data.length; i++){
+                if(data[i].pid == id){
+                    arr.push(data[i])
+                }
+            }
+            return arr;
+        }
+
+        // 先实现一个 实现第一级
+        // 先找到第一级的数据
+        var ininPid = -1;  // 顶层的id
+        // 循环数据，查找数据中那些pid为ininPid
+
+        function createTreeHtml(id){
+           var child = getChildsById(id); 
+           var html = '';
+           if(child.length){
+                html += '<ul>'
+                child.forEach(function(item){
+                     html += `<li>
+                        <span class="add">${item.title}</span>
+                        ${createTreeHtml(item.id)}
+                     </li>`
+                })
+                html += '</ul>'
+           }
+           return html;
+        }
+        
+
+        var tree = document.querySelector(".tree");
+
+        tree.innerHTML = createTreeHtml(ininPid);
+
+
+    </script>
+</body>
+
+</html>

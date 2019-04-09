@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			
+
+
+
+		</script>
+	</head>
+
+	<body>
+		<ul id="list">
+			<li>123</li>
+		</ul>
+		<script>
+			/*
+				this
+					全局 this => window
+					函数中 this => 
+
+					函数在哪里被调用了，函数调用决定this的值
+					1. 直接调用 		this => window
+					2. 事件调用 		this =>触发事件的元素
+					3. 定时器调用 		this => window
+					4. new调用函数 		this => 内部创建的隐式对象
+					5. 对象调用函数 		this => 调用函数的对象
+
+			*/
+
+			function fn(){
+				console.log(this);
+			}
+
+			fn();
+
+			document.onclick = fn;
+
+
+		</script>
+	</body>
+</html>

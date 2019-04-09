@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>网易新闻</title>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<script type="text/javascript" src="js/m.touch.js"></script>
+<script type="text/javascript">
+(function(){
+	var html = document.documentElement;
+	var size = html.clientWidth/7.5;
+	html.style.fontSize = size + "px";
+})();
+</script>
+<style type="text/css">
+body,
+p {
+	margin: 0;
+}
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+a {
+	text-decoration: none;
+	-webkit-tap-highlight-color: transparent;
+}	
+img {
+	vertical-align: top;
+}
+
+/* 页面大结构 */
+body,
+html {
+	height: 100%;
+}
+.page {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+	background: #ccc;
+}
+#header {
+	height: 40px;
+	background: #fff;
+	font: 20px/40px "宋体";
+	text-align: center;
+}
+
+/* 导航部分样式 */
+#nav {
+	position: relative;
+	z-index: 10;
+	height: 40px;
+	background: red;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+.nav {
+	position: relative;
+	margin-right: 40px;
+	height: 40px;
+	overflow: hidden;
+}
+.nav:before {
+	content: "";
+	position: absolute;
+	left: 0;
+	width: 30px;
+	height: 40px;
+	background: linear-gradient(90deg,red,rgba(255, 0, 0, 0));
+}
+.nav:after {
+	content: "";
+	position: absolute;
+	right: 0;
+	width: 30px;
+	height: 40px;
+	background: linear-gradient(-90deg,red,rgba(255, 0, 0, 0));
+}
+.nav p {
+	float: left;
+	white-space: nowrap;
+	font: 14px/40px "宋体";
+}
+.nav a {
+	margin: 0 10px;
+	color: #fff;
+}
+.navOpen {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 40px;
+	font: 14px/40px "宋体";
+	color: #fff;
+	text-align: center;
+}
+.navdetails {
+	position: absolute;
+	left: 0;
+	top: 40px;
+	width: 100%;
+	height: 0;
+	overflow: hidden;
+	background: #fff;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	transition: .3s;
+}
+/*pullState*/
+.pullState {
+	position: absolute;
+	top: 40px;
+	left: 0;
+	width: 100%;
+	font: 16px/40px "宋体";
+	text-align: center;
+}
+
+/* 幻灯片 */
+#tabImg {
+	position: relative;
+	z-index: 1;
+	overflow: hidden;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+.imgs {
+	overflow: hidden;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+.imgs li {
+	float: left;
+}
+.imgs img {
+	width: 100%;
+}
+.number {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	font-size: 16px;
+	line-height: 30px;
+	color: yellow;
+}
+.t {
+	font-size: 20px;
+	color: red;
+}
+.d {
+	font-size: 16px;
+}
+.textList li{
+	line-height: 2.4;
+	font-size: 15px;
+	overflow: hidden;
+	border-bottom: thin solid #000;
+	background: #fff;
+}
+.textList img {
+	float: left;
+	margin: .2rem;
+	width: 1.6rem;
+	height: 1.2rem;
+}
+.textList p {
+	width: 5.5rem;
+	float: left;
+	font: .3rem/1.6rem "宋体";
+}
+footer {
+	font: 16px/40px "宋体";
+	text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div class="scroll">
+		<header id="header">妙味课堂</header>
+		<!-- 导航 -->
+		<nav id="nav">
+			<div class="nav">
+				<p>
+					<a href="#">推荐</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">妙味课堂</a><a href="#">推荐</a>
+				</p>
+			</div>
+			<a href="javascript:;" class="navOpen">展开</a>
+			<div class="navdetails">展开的详细导航</div>
+		</nav>
+		<!-- 下拉刷新的状态 -->
+		<p class="pullState">下拉加载最新消息</p>
+		<!-- 幻灯片 -->
+		<div id="tabImg">
+			<ul class="imgs">
+				<li>
+					<a href="#">
+						<img src="img/1.png" />
+					</a>
+				</li>	
+				<li>
+					<a href="#">
+						<img src="img/2.png" />
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/3.png" />
+					</a>
+				</li>	
+			</ul>
+			<p class="number"><span class="t">1</span>/<span class="d">3</span></p>
+		</div>
+		<!-- 页面内容 -->
+		<ul class="textList">
+			<!-- <li>
+				<img src="img/img.jpg" />
+				<p>这是第0个li的内容</p>
+			</li> -->
+		</ul>
+		<footer>加载更多内容...</footer>
+	</div>
+</div>
+<script type="text/javascript">
+/* 滑动的导航 */
+(function(){
+	var nav = document.querySelector('.nav');
+	swiper({
+		wrap:nav,
+		dir: "x",
+		backOut: "out"
+	});
+})();
+/* 点击展开导航 */
+(function(){
+	var nav = document.querySelector('#nav');
+	var navOpen = document.querySelector('.navOpen');
+	var navDetails = document.querySelector('.navdetails');
+	tap(navOpen,function(){
+		if(css(navDetails,"height")){
+			css(navDetails,"height",0);
+		} else {
+			var winH = document.documentElement.clientHeight;
+			var openH = winH - nav.getBoundingClientRect().bottom;
+			css(navDetails,"height",openH);
+		}
+	});
+})();	
+
+/* 幻灯片部分处理 */
+(function(){
+	var tabImg = document.querySelector('#tabImg');
+	var imgs = document.querySelector('.imgs');
+	var number = document.querySelector('.number');
+	    imgs.innerHTML += imgs.innerHTML;
+	var img = imgs.querySelectorAll('li');
+	var imgW = css(tabImg,"width");
+	var now = 0;
+	//var imgW = css(imgs,"width");
+	imgs.style.width = img.length + "00%";
+	for(var i = 0; i < img.length; i++){
+		img[i].style.width = 100/img.length + "%";
+	}
+	toNub();
+	/* 修改number的页码 */
+	function toNub(){
+		number.innerHTML = '<span class="t">'+(now%(img.length/2) + 1)+'</span>/<span class="d">'+(img.length/2)+'</span>';
+	}
+
+	/* 滑屏修改幻灯片 */
+	swiper({
+		wrap:tabImg,
+		dir: "x",
+		backOut: "none",
+		start: function(){
+			imgs.style.transition = "none";
+			imgW = css(tabImg,"width");
+			/* 处理无缝 */
+			if(now == 0){
+				now = img.length/2;
+			} else if(now == img.length-1){
+				now = img.length/2 - 1;
+			}
+			css(imgs,"translateX",-now * imgW);
+		},
+		end: function(){
+			cancelAnimationFrame(imgs.timer);
+			var nowX = css(imgs,"translateX");
+			now = -Math.round(nowX/imgW);
+			nowX = -now*imgW;
+			imgs.style.transition = ".3s";
+			css(imgs,"translateX",nowX);
+			toNub();
+		}
+	});
+})();
+
+/* 假的页面数据 */
+var data = [];
+for(var i = 0; i < 40; i++){
+	data.push('<li><img src="img/img.jpg" /><p>这是第'+i+'个li的内容</p></li>');
+}
+
+/* 整个页面滑屏 */
+(function(){
+	var page = document.querySelector('.page');
+	var scroll = document.querySelector('.scroll');
+	var textList = document.querySelector('.textList');
+	var now = 0;//当前加载到第几屏
+	var length = 30;//每次加载多少项
+	var nav = document.querySelector('#nav');
+	var header = document.querySelector('#header');
+	var navTop = nav.getBoundingClientRect().top;
+	var footer = document.querySelector('footer');
+	var footerH = css(footer,"height");
+	var min = 0;//移动出去的最大距离
+	var pullState = document.querySelector('.pullState');
+	var pullStateRange = 60;
+	pushCreate();
+	swiperBar({
+		wrap: page,
+		dir: "y",
+		backOut: "out",
+		start: function(){
+			min = css(page,"height") - css(scroll,"height");
+		},
+		move: function(){
+			//导航的吸附效果
+			var scrollY = css(scroll,"translateY");
+			toNav();
+			/* 下拉状态更新 */
+			if(scrollY >= pullStateRange){
+				pullState.innerHTML = "松开立即更新";		
+			} else {
+				pullState.innerHTML = "下拉加载最新消息";
+			}
+		},
+		end: function(){
+			var scrollY = css(scroll,"translateY");
+			if(scrollY >= pullStateRange){ //当下拉到达临界点时
+				cancelAnimationFrame(scroll.timer);
+				startMove({
+					el: scroll,
+					type: "easeOut",
+					time: 200,
+					target:{
+						translateY: pullStateRange
+					},
+					callIn: function(){
+						toNav();
+						console.log(2);
+					},
+					callBack: function(){
+						//console.log(1);
+						pullState.innerHTML = "更新中";
+						pullCreate();
+						startMove({
+							el: scroll,
+							type: "easeOut",
+							time: 200,
+							target:{
+								translateY: 0
+							},
+							callIn: function(){
+								toNav();
+							}
+						});
+					}
+				});
+			}
+		},
+		over: function(){//动画结束的时候
+			//滚动至底部加载更多内容
+			var scrollY = css(scroll,"translateY");
+			console.log(scrollY + footerH,min);
+			toNav();
+			if(scrollY - footerH <= min){
+				//console.log(1);
+				setTimeout(function(){
+					now++;
+					pushCreate();
+				},500);
+			}
+		}
+	});
+	//导航的吸附状态
+	function toNav(){
+		var scrollY = css(scroll,"translateY");
+		if(-scrollY >= navTop){//当前的滚动距离已经滚动到导航处
+			//console.log(scrollY + navTop);//导航目前距离顶部的距离
+			css(nav,"translateY",-(scrollY + navTop));
+			css(header,"translateY",0);
+		} else if(scrollY >= 0){//如果顶部超出了，保持header和导航在顶部的位置不变
+			css(header,"translateY",-scrollY);
+			css(nav,"translateY",-scrollY);
+		}
+	}
+
+	/* 下拉更新最新消息 */
+	function pullCreate(){
+		var length = Math.round(Math.random() * 10);
+		var first = textList.children[0];
+		for(var i = 0; i < length; i++){
+			var li = document.createElement("li");
+			li.innerHTML = "最新消息" + i;
+			textList.insertBefore(li,first);
+			//data2.push("最新消息");
+		}
+	}
+	/* 上滑生成元素 要调用的方法 */
+	function pushCreate(){
+		var start = now * length;
+		var end = start + length;
+		if(start >= data.length){
+			footer.innerHTML = "不要在拉了，已经到底了";
+		}
+		end = end > data.length?data.length:end;
+		for(var i = start; i < end; i++){
+			var li = document.createElement("li");
+			li.innerHTML = data[i];
+			textList.appendChild(li);
+		}
+
+	}
+})();
+</script>	
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript">
+addOrientation(function(){
+	alert("这是横屏");
+},function(){
+	alert("这是竖屏");
+});
+//fn 切换到横屏时 要执行的函数
+// fn2 切换到竖屏时 要执行的函数
+function addOrientation(fn,fn2){
+	toChange();
+	window.addEventListener(window.orientation == undefined?'resize':'orientationchange', toChange);
+	function toChange(e) {
+		if(window.orientation == undefined){
+			var html = document.documentElement;
+			var htmlW = html.clientWidth;
+			var htmlH = html.clientHeight;
+			if(htmlW > htmlH){
+				fn&&fn();
+			} else {
+				fn2&&fn2();
+			}
+		} else {
+			if(window.orientation == 0 || window.orientation == 180){
+				fn2&&fn2();
+			} else {
+				fn&&fn();
+			}
+		}
+	}
+}		
+</script>
+</head>
+<body>
+	
+</body>
+</html>

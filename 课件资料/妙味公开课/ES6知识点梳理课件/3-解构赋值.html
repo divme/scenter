@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			
+			let arr = ["miaov","ketang",'leo'];
+
+			let a = arr[0];
+			let b = arr[1];
+
+			// 解构赋值
+
+			let [c,d,e=10] = arr;
+
+			console.log(c,d,e);
+
+			let obj = {foo: 1, bar: 2,miaov:3};
+
+			let miaov = 20;
+
+			let {foo,miaov:abc='ketang',bar} = obj;
+
+			console.log(foo,bar,abc);
+
+		</script>
+	</head>
+
+	<body>
+		
+	</body>
+</html>

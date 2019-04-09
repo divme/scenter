@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			
+			/*function fn(n){
+				document.onclick = function (){
+					console.log(n);	
+				}
+			}
+
+			fn(10)*/
+
+
+			function fn(){
+				var a = 10;
+				function fn2(){
+					a++;
+					console.log(a);	
+				}
+				return fn2;
+			}
+
+			fn()();
+			fn()();
+
+			var f = fn();
+
+			f()
+			f()
+			f()
+			f()
+			f()
+
+
+		</script>
+	</head>
+
+	<body>
+		
+	</body>
+</html>

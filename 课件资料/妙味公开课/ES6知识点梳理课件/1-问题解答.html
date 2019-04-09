@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			
+
+
+
+		</script>
+	</head>
+
+	<body>
+		<ul>
+			<li>123</li>
+			<li>123</li>
+			<li>123</li>
+			<li>123</li>
+		</ul>
+		<script>
+
+			
+			// 左边在取值                取值
+			// miaov.ketang = 6          miaov.ketang = 3;
+			// 取值的时候，可以监控到取值
+
+			/*let miaov = {
+				n: 12,
+				get ketang(){   // 取值的时候触发get函数
+					//console.log(123);
+					return this.n = this.n/2;
+				}
+			}*/
+
+			let miaov = new Proxy({n:12},{
+				get (target,key){
+					target.n = target.n/2
+					return key === 'ketang' ? target.n : '';
+				}
+			})
+
+			let bl = miaov.ketang > 5 && miaov.ketang < 5;
+
+			console.log(bl);
+
+
+
+		</script>
+	</body>
+</html>

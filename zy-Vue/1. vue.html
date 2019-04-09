@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指令式Vue</title>
+    <script src="src/vue.min.js"></script>
+    <style>
+        table {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+        table {
+            width: 100%;
+        }
+
+        th {
+            height: 50px;
+        }
+        td{
+            height: 40px;
+            line-height: 40px;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+        div{
+            margin: 30px auto;
+            text-align: center;
+        }
+        #app div{
+            text-align: right;
+        }
+        button{
+            padding: 5px 10px;
+            background: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <table>
+        <tr>
+            <th>序号</th>
+            <th>商品名称</th>
+            <th>商品价格</th>
+            <th>购买数量</th>
+            <th>操作</th>
+        </tr>
+        <tr v-for="iphone in products">
+            <td>{{ iphone.id }}</td>
+            <td>{{ iphone.name }}</td>
+            <td>{{ iphone.price }}</td>
+            <td>
+                <button v-bind:disabled="iphone.count === 0" v-on:click="iphone.count-=1">-</button>
+                {{ iphone.count }}
+                <button v-on:click="iphone.count+=1">+</button>
+            </td>
+            <td>
+                <button v-on:click="iphone.count=0">移除</button>
+            </td>
+        </tr>
+    </table>
+    <div>总价：{{totalPrice()}}</div>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            products: [{
+                    id: 1,
+                    name: 'iphone 8',
+                    price: 5099,
+                    count: 1
+                },
+                {
+                    id: 2,
+                    name: 'iphone xs',
+                    price: 8699,
+                    count: 1
+                },
+                {
+                    id: 3,
+                    name: 'iphone xr',
+                    price: 6499,
+                    count: 1
+                }]
+
+        },
+        methods:{
+            totalPrice : function(){
+                var totalP = 0;
+                for (var i = 0,len = this.products.length; i<len; i++) {
+                    totalP += this.products[i].price*this.products[i].count;
+                }
+                return totalP;
+            }
+        }
+    })
+</script>
+</body>
+</html>

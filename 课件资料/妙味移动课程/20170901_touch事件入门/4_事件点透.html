@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<style type="text/css">
+#box {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 150px;
+	height: 150px;
+	background: red;
+	opacity: .5;
+}	
+</style>
+</head>
+<body>
+<a href="http://www.miaov.com">妙味课堂</a>
+<div id="box"></div>
+<script type="text/javascript">
+/*
+事件点透:
+	在移动端，我们触碰一个元素时，会立即执行，添加在元素上的touch事件，然后记录坐标，300ms之后 在这个坐标点查找元素，如果找到元素有 mouse时间，就执行加在元素的mouse事件
+解决办法：
+	给元素清除默认事件	
+*/
+(function(){
+	var box = document.querySelector('#box');
+	box.addEventListener('touchstart', function(e) {
+		this.style.display = "none";
+		e.preventDefault();
+	});
+})();	
+</script>	
+</body>
+</html>

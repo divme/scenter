@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoList</title>
+    <script src="src/vue.min.js"></script>
+</head>
+<body>
+
+  <div id="todolist">
+      <input type="text" v-model="newTxt" @keyup.enter="addList" placeholder="add a new todolist" />
+      <ul>
+          <li is="todo-item" v-for="(item, index) in items"  :item="item" @remove="items.splice(index,1)">{{item}}</li>
+      </ul>
+      <div>{{newTxt+ '  ' + oldTxt}}</div>
+  </div>
+
+  <script>
+      Vue.component('todo-item', {
+         props:['item'],
+         template: "<li>{{item}}<button @click='$emit(\"remove\")'>X</button></li>"
+      });
+
+      var vm = new Vue({
+          el: '#todolist',
+          data: {
+              newTxt: '',
+
+              items :[
+                      '1. eat',
+                      '2. sleep',
+                      '3. fuck'
+              ]
+          },
+          methods: {
+              addList: function(){
+                  this.items.push(this.newTxt);
+                  this.newTxt = '';
+              }
+          },
+          computed: {
+              oldTxt:  function(){
+                  return this.newTxt.split('').reverse().join('')
+              }
+          }
+      })
+
+  </script>
+</body>
+</html>

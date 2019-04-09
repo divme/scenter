@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+#box {
+	width: 260px;
+	height: 260px;
+	background: red;
+	font-size: 20px;
+	color: #fff;
+}	
+</style>
+</head>
+<body>
+<div id="box"></div>
+<script type="text/javascript">
+var box = document.querySelector('#box');
+//devicemotion 检测手机加速度
+// 安卓下 和 ios下 重力加速的取值方向相反
+window.addEventListener('devicemotion', function(e) {
+	var motion = e.accelerationIncludingGravity;//重力加速度对象
+	var x = Math.round(motion.x);//x方向加速度
+	var y = Math.round(motion.y);//y方向加速度 
+	var z = Math.round(motion.z);//z方向加速度
+	box.innerHTML = "x:"+x;
+	box.innerHTML += "<br/>y:"+y;
+	box.innerHTML += "<br/>z:"+z;
+});	
+/*
+	callBack:重力加速度所要执行的函数
+*/
+function getIos()
+{
+      var u = navigator.userAgent;
+      return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+}
+addMotion(function(e){
+	var motion = e.accelerationIncludingGravity;
+	var x = Math.round(motion.x);//x方向加速度
+	var y = Math.round(motion.y);//y方向加速度 
+	var z = Math.round(motion.z);//z方向加速度
+	box.innerHTML = "x:"+x;
+	box.innerHTML += "<br/>y:"+y;
+	box.innerHTML += "<br/>z:"+z;
+});
+function addMotion(callBack){
+	window.addEventListener('devicemotion', function(e) {
+		alert(getIos());
+		if(!getIos()){
+			e.accelerationIncludingGravity.x = -e.accelerationIncludingGravity.x;
+			e.accelerationIncludingGravity.y = -e.accelerationIncludingGravity.y;
+			e.accelerationIncludingGravity.z = -e.accelerationIncludingGravity.z;
+		}
+		callBack&&callBack(e);
+	});
+}
+</script>	
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+
+      var style={
+         fontSize: 40,
+         color: 'red'
+      }
+      function HelloMessage(props){
+        console.log(props.name);
+        return <h1 style={props.styled}>Hello {props.name.a}</h1>;
+      }
+
+//      var dd = 'ds'
+//      var dd = {
+//        a: 'IamA',
+//        b: 'IamB',
+//        c: 'IamC',
+//        d: 'IamD'
+//      }
+//      var dd = [1,2,3]
+      ReactDOM.render(
+        <HelloMessage name={{
+          a:'IamA',
+          b: 'IamB'
+        }} styled={style} />,
+        document.getElementById('example')
+      );
+    </script>
+
+  </body>
+</html>

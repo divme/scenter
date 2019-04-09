@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+#box {
+	width: 100px;
+	height: 100px;
+	background: red;
+}	
+</style>
+</head>
+<body>
+<div id="box"></div>
+<script type="text/javascript" src="js/tween.js"></script>
+<script type="text/javascript" src="js/miaov.move.js"></script>
+<script type="text/javascript" src="js/miaov.touch.js"></script>
+<script type="text/javascript">
+(function(){
+	var box = document.querySelector('#box');
+	css(box,"translateX",0);
+	css(box,"translateY",0);
+	startMove({
+		el: box,
+		type: "backBoth",
+		time: 500,
+		target: {
+			translateX: 300,
+			translateY: 400
+		},
+		callBack: function(){
+			console.log("动画执行完了");
+		},
+		callIn: function(){
+			console.log("动画执行中");	
+		}
+	});
+})();
+/*
+	startMove(init)
+	init:{
+		el: 要动画的元素,
+		type: 动画的类型,
+		target: {//目标值
+			left: 100,
+			translateX: 100
+		},
+		time: //动画时长ms,
+		callBack: fn //动画执行完成之后 要执行的函数
+		callIn: fn//动画执行中
+	}
+*/
+function startMove(init){
+	var t = 0;
+	var b = {};//样式的初始值
+	var c = {};//样式的差值	
+	var d = Math.ceil(init.time/16.7);
+	cancelAnimationFrame(init.el.timer);
+	for(var s in init.target) {
+		b[s] = css(init.el,s);
+		c[s] = init.target[s] - b[s];
+	}
+	console.log(b,c);
+	init.el.timer = requestAnimationFrame(move);
+	function move(){
+		if(t > d){
+			cancelAnimationFrame(init.el.timer);
+			init.callBack&&init.callBack.call(init.el);
+		} else {
+			t++;
+			for(var s in init.target){
+				var val = Tween[init.type](t,b[s],c[s],d);
+				css(init.el,s,val);
+			}
+			init.callIn&&init.callIn.call(init.el);
+			init.el.timer = requestAnimationFrame(move);
+		}
+	}
+}	
+</script>
+</body>
+</html>

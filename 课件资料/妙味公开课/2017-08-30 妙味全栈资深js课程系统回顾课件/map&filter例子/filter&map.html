@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			div {
+				width: 100px;
+				height: 300px;
+			}
+		</style>
+		<script>
+			
+		</script>
+	</head>
+
+	<body>
+		<input type="button" value="小于30岁的" id="btn" />
+		<ul id="list">
+			<!-- <li>
+				<span>姓名：</span><span>leo</span>
+				<span>性别：</span><span>男</span>
+				<span>工作：</span><span>CEO</span>
+				<span>年龄：</span><span>30</span>
+			</li>
+			<li>
+				<span>姓名：</span><span>leo</span>
+				<span>性别：</span><span>男</span>
+				<span>工作：</span><span>CEO</span>
+				<span>年龄：</span><span>30</span>
+			</li> -->
+		</ul>
+		<script>
+			var arr = [
+				{
+					name:"leo",
+					job:"CEO",
+					sex:"男",
+					age:31
+				},
+				{
+					name:"leo2",
+					job:"CEO",
+					sex:"男",
+					age:40
+				},
+				{
+					name:"leo3",
+					job:"CEO",
+					sex:"男",
+					age:28
+				},
+				{
+					name:"leo2",
+					job:"CEO",
+					sex:"男",
+					age:27
+				},
+				{
+					name:"leo3",
+					job:"CEO",
+					sex:"男",
+					age:26
+				}
+			];
+
+			var btn = document.getElementById("btn");
+
+			btn.onclick = function (){
+				var newArr = arr.filter(function (item){
+					return item.age < 30	
+				});
+				render(newArr);
+
+			};	
+
+			var list = document.getElementById("list");
+
+			function render(arr){
+					
+					var newArr = arr.map(function(item){
+						return `<li>
+								<span>姓名：</span><span>${item.name}</span>
+								<span>性别：</span><span>男</span>
+								<span>工作：</span><span>CEO</span>
+								<span>年龄：</span><span>30</span>
+							</li>`
+					});
+
+					list.innerHTML = newArr.join("");
+			}
+
+			render(arr);
+
+
+
+			
+
+			
+
+			console.log(newArr);
+
+		</script>
+	</body>
+</html>

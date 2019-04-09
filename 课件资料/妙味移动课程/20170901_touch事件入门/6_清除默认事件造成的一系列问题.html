@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<title>Document</title>
+</head>
+<body>
+<ul class="list">
+	<!-- <li></li> -->
+</ul>	
+<script type="text/javascript">
+var inner = "";
+var list = document.querySelector('.list');
+for(var i = 0; i < 50; i++){
+	inner += "<li>这是第"+i+"个li</li>";
+}	
+list.innerHTML = inner;
+/*
+新版的chrome下，不支持直接给 document和body的touch事件，阻止默认事件 
+document.addEventListener('touchstart', function(e) {
+	e.preventDefault();
+});
+*/
+list.addEventListener('touchstart', function(e) {
+	//e.preventDefault();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VueMain</title>
+    <script type="text/javascript">
+        var initWidth = 0;
+        if(document.documentElement.clientWidth > 100){
+            initWidth = document.documentElement.clientWidth;
+        }else{
+            initWidth = Math.max(window.innerWidth, screen.availWidth);
+            initWidth = initWidth > 10? initWidth : 360;
+        }
+        document.documentElement.style.fontSize = initWidth / 3.75 + 'px'
+    </script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: #f4f4f4;
+            font-size: 14px;
+        }
+        /*快捷入口*/
+        @media only screen and (min-width:1px){
+            .shortbox {
+                display: flex;
+                display: -webkit-flex;
+                -webkit-justify-content: flex-start;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                -webkit-flex-wrap: wrap;
+                flex-direction: row;
+                -webkit-flex-direction: row;
+
+                padding: 10px 0;
+                list-style: none;
+                background: #fff;
+                color: #222333;
+            }
+            .sc{
+                width: 25%;
+                display: flex;
+                display: -webkit-flex;
+                flex-direction: column;
+                -webkit-flex-direction: column;
+                align-items: center;
+                -webkit-align-items: center;
+                padding-top: 7px;
+                padding-bottom: 5px;
+            }
+            .shortbox img{
+                width: 0.5rem;
+                height: 0.5rem;
+            }
+
+            img {
+                border: none;
+                outline: none;
+                vertical-align: middle;
+            }
+            .shortbox span{
+                padding-top: 8px;
+                font-size: 14px;
+                color: #333;
+            }
+        }
+
+        /*指数展示*/
+        @media only screen and (min-width:1px){
+            .stockdata {
+                position: relative;
+                width: 100%;
+                margin: 10px 0;
+                padding-top: .2rem;
+                padding-bottom: .12rem;
+                font-size: 0;
+                background: #ffffff;
+                z-index: 10;
+            }
+
+            .stockdata .listbox {
+                display: inline-block;
+                width: 33%;
+                padding-left: .2rem;
+                border-right: 1px solid #f0f0f0;
+                box-sizing: border-box;
+                /*color: #848484;*/
+            }
+
+            .stockdata .listbox:nth-of-type(3) {
+                border-right: none;
+            }
+
+            .stockdata .name {
+                line-height: 1.6;
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .stockdata .current {
+                line-height: 1.2;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .stockdata .dif {
+                display: inline-block;
+                /*width: 50%;*/
+                padding-right: .1rem;
+                font-size: 10px;
+                font-weight: bold;
+            }
+
+            .stockdata .codepercent {
+                display: inline-block;
+                /*width: 45%;*/
+                font-size: 10px;
+                font-weight: bold;
+                text-align: center;
+            }
+            .current, .dif, .codepercent{
+                color: #848484;
+            }
+            .rise .current, .rise .dif, .rise .codepercent {
+                color: #ff2a2a;
+            }
+
+            .fall .current, .fall .dif, .fall .codepercent {
+                color: #13aa56;
+            }
+        }
+
+        /*滚动资讯*/
+        @media only screen and (min-width:1px){
+            .scrollnews{
+                /*height: 0.84rem;*/
+                padding: .16rem 0;
+                margin-top: 0.1rem;
+                font-size: 0;
+                background: #ffffff;
+                overflow: hidden;
+                /*border-top: 1px solid rgba(222,222,222,.5);*/
+                background-image: -webkit-linear-gradient(#e8e8e8 51%,transparent 50%);
+                background-image: -moz-linear-gradient(#e8e8e8 51%,transparent 50%);
+                background-image: -o-linear-gradient(#e8e8e8 51%,transparent 50%);
+                background-image: linear-gradient(#e8e8e8 60%,transparent 50%);
+                background-size: 100% 1px;
+                background-size: calc(100% - .3rem) 1px;
+                background-repeat: no-repeat;
+                background-position: bottom center;
+            }
+            .scrollicon{
+                display: inline-block;
+                height: .52rem;
+                width: .75rem;
+                background: url("./image/zxIcon.png") no-repeat center center;
+                background-size: .36rem auto;
+                vertical-align: top;
+            }
+            .scrollzxbox{
+                display: inline-block;
+                position: relative;
+                max-width: 2.8rem;
+                height: 0.52rem;
+                line-height: 0.55rem;
+                overflow: hidden;
+            }
+            .scrollzx{
+                position: relative;
+                font-size: 15px;
+            }
+            .scrollzx p{
+                height: .26rem;
+                line-height: .28rem;
+                font-size: 14px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: #333;
+            }
+            .scrollzx .noContent{
+                height: 0.52rem;
+                line-height: 0.56rem;
+                font-size: 15px;
+                font-weight: bold;
+            }
+        }
+
+        /*基础组件--标题*/
+        @media only screen and (min-width:1px){
+            .headline{
+                display: flex;
+                display: -webkit-flex;
+                justify-content: space-between;
+                -webkit-justify-content: space-between;
+
+                height: .55rem;
+                padding: 0.03rem .15rem 0 0;
+                background: #ffffff;
+            }
+            .headlineName{
+                height: .55rem;
+                line-height: .58rem;
+                text-indent: .15rem;
+                border-left: 4px solid #f03838;
+                border-left-top-radius: 2px;
+                font-size: 18px;
+                font-weight: bold;
+                color: #161616;
+            }
+            .headlineMore{
+                height: .52rem;
+                line-height: .55rem;
+                padding-right: .15rem;
+                background: url("./image/assets-w.png") no-repeat right center;
+                background-size: 0.08rem auto;
+                font-size: 14px;
+                color: #919191;
+            }
+        }
+
+        /*常用功能*/
+        @media only screen and (min-width:1px){
+            .contentArea{
+                overflow-x: scroll;
+                background: #ffffff;
+            }
+            .functionContent{
+                /*width: 4.1rem;*/
+                width: 180%;
+                height: 0.9rem;
+            }
+            .funcItem{
+                float: left;
+                width: .82rem;
+                height: .82rem;
+                text-align: center;
+            }
+            .funcItem img{
+                width: .22rem;
+                margin: .12rem auto .15rem;
+            }
+            .funcItem span{
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div id="app">
+      <div>
+          <!--<test v-for="item in stockdata"></test>-->
+      </div>
+
+      <div class="shortbox">
+          <my-shortcut v-for="item in shortcuts" :url="item.url" :name="item.name" classname="sc"></my-shortcut>
+      </div>
+      <template>
+          <my-newsbox :messages="messages"></my-newsbox>
+      </template>
+      <div class="stockdata">
+          <my-stockcode v-for="(item, index) in stockdata" :id="index" :rise="item.isrise" :codename="item.name" :codevalue="item.value" :codedif="item.dif" :codepercent="item.percent"></my-stockcode>
+      </div>
+      <div class="stockdata">
+          <my-stockcode2 v-for="(items, index) in stockdata" :id="index" :item="items"></my-stockcode2>
+      </div>
+
+      <div>
+         <my-title title="常用功能" :showmore="false"></my-title>
+          <div class="contentArea">
+              <div class="functionContent" >
+                  <my-shortcut v-for="item in commonfunc" :url="item.url" :name="item.name" classname="funcItem"></my-shortcut>
+              </div>
+          </div>
+      </div>
+
+  </div>
+  <script src="src/vue.min.js"></script>
+  <script>
+//        全局过滤器
+      Vue.filter('capitalize', function (value) {
+         if (!value) return ''
+         value = value.toString()
+         return value.charAt(0).toUpperCase() + value.slice(1)
+     })
+
+//        全局混入
+      Vue.mixin({
+         created: function () {
+                console.log('I am mixin')
+         }
+     })
+
+//      测试组件
+      Vue.component('test',{
+//            props:['test'],
+//            template: `<div class="sc">{{test}}</div>`
+        render: function (createElement) {
+            var myParagraphVNode = createElement('p', {
+                class: ''
+            },'hi');
+            return createElement('div', [
+                // 错误-重复的 VNodes
+                myParagraphVNode, myParagraphVNode
+            ])
+        }
+    });
+
+//      快捷入口组件
+      Vue.component('my-shortcut',{
+          props:['url', 'name', 'classname'],
+          template: `<div :class="classname"><img :src="url"><span>{{name}}</span></div>`
+      });
+//      指数组件
+      Vue.component('my-stockcode',{
+          props:['rise','id','codename', 'codevalue', 'codedif', 'codepercent'],
+          template: `<div class="listbox" :class="rise" :id="'num'+id">
+                            <div class="name">{{codename}}</div>
+                            <div class="current">{{codevalue}}</div>
+                            <span class="dif">{{codedif}}</span><span class="codepercent">{{codepercent}}</span>
+                      </div>`
+      });
+      Vue.component('my-stockcode2',{
+          props:['item','id'],
+          template: `<div class="listbox" :class="item.isrise" :id="'num'+id">
+                            <div class="name">{{item.name}}</div>
+                            <div class="current">{{item.value}}</div>
+                            <span class="dif">{{item.dif}}</span><span class="codepercent">{{item.percent}}</span>
+                      </div>`
+      });
+
+//      资讯组件
+      Vue.component('my-newsbox', {
+          props: ['messages'],
+          template: `<div class="scrollnews" id="scrollnews">
+                  <div class="scrollicon"></div>
+                  <div class="scrollzxbox">
+                       <div class="scrollzx" id="scrollzx" style="top: 0;">
+                           <p v-for="(message,index) in messages" :message="message" :tag="index">{{message.title}}</p>
+                        </div>
+                  </div>
+           </div>`
+      });
+
+//       标题组件
+      Vue.component('my-title',{
+          props:{
+              title:{
+                  type: String,
+                  required: true
+              },
+              showmore:{
+                  type: Boolean,
+                  required: true
+              }
+          },
+          template: `<div class="headline">
+            <span class="headlineName">{{title}}</span>
+            <span class="headlineMore" v-if="showmore">更多</span>
+        </div>`
+      });
+
+
+      var vm = new Vue({
+          el: '#app',
+          data:function(){
+              return {
+                  shortcuts: [
+                      {
+                          url: 'image/ic_xgsg.png',
+                          name: '新股申购'
+                      },
+                      {
+                          url: 'image/ic_tgsq.png',
+                          name: '投顾社区'
+                      },
+                      {
+                          url: 'image/ic_jrsc.png',
+                          name: 'AI投'
+                      },
+                      {
+                          url: 'image/ic_gzlc.png',
+                          name: '国债理财'
+                      },
+                      {
+                          url: 'image/ic_wdzc.png',
+                          name: '我的资产'
+                      },
+                      {
+                          url: 'image/ic_ywbl.png',
+                          name: '业务办理'
+                      },
+                      {
+                          url: 'image/ic_wykh.png',
+                          name: '我要开户'
+                      },
+                      {
+                          url: 'image/ic_mncg.png',
+                          name: '模拟炒股'
+                      }
+                  ],
+                  stockdata:[
+                      {
+                          isrise: 'rise',
+                          name: '上证指数',
+                          value: '2504',
+                          dif: '-9',
+                          percent: '-0.05%'
+                      },
+                      {
+                          isrise: 'rise',
+                          name: '深证成指',
+                          value: '2504',
+                          dif: '-9',
+                          percent: '-0.05%'
+                      },
+                      {
+                          isrise: 'rise',
+                          name: '创业板指',
+                          value: '2504',
+                          dif: '-9',
+                          percent: '-0.05%'
+                      }
+                  ],
+                  messages:[
+                      {
+                          title: '朱文瑾谈科创板之科创：期待不要限制行业'
+                      },
+                      {
+                          title: '国海证券：电动车长期配置价值临近 布局概念股'
+                      },
+                      {
+                          title: '两市微跌 “抓大放小”特征显著'
+                      },
+                      {
+                          title: '巨丰投顾：金融股助大盘金针探底'
+                      },
+                      {
+                          title: '天信投顾：节前将重新站上一重要关口'
+                      }
+                  ],
+                  commonfunc:[
+                      {
+                          url: 'image/func-znxg.png',
+                          name: '智能选股'
+                      },
+                      {
+                          url: 'image/func-lhbd.png',
+                          name: '龙虎榜单'
+                      },
+                      {
+                          url: 'image/func-wdcc.png',
+                          name: '我的持仓'
+                      },
+                      {
+                          url: 'image/func-lcrl.png',
+                          name: '理财日历'
+                      },
+                      {
+                          url: 'image/func-ywzb.png',
+                          name: '沪深要闻'
+                      },
+                      {
+                          url: 'image/func-sjzx.png',
+                          name: '数据中心'
+                      },
+                      {
+                          url: 'image/func-sczs.png',
+                          name: '市场指数'
+                      },
+                      {
+                          url: 'image/func-hybk.png',
+                          name: '行业板块'
+                      }
+                  ]
+              }
+          },
+          a: 1,
+          b:2,
+          created: function () {
+              console.log(this.$options.a)
+          }
+      })
+  </script>
+</body>
+</html>

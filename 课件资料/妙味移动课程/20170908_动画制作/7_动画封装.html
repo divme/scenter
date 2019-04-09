@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+#box {
+	position: absolute;
+	left: 0;
+	top: 50px;
+	width: 100px;
+	height: 100px;
+	background: red;
+	color: #fff;
+}	
+</style>
+</head>
+<body>
+<input type="button" value="执行动画">
+<div id="box"></div>
+<script type="text/javascript" src="js/tween.js"></script>
+<script type="text/javascript">
+/*
+tween:
+t, 当前执行动画第几次 
+b, 起始值
+c, 起始值和结束值 之间的差值
+d  动画执行总次数
+
+返回值： 当前次 元素应在在的一个位置
+*/	
+var box = document.querySelector('#box');
+var btn = document.querySelector('input');
+var t = 0;
+var d = 10;
+var b = 0;
+var c = 300;
+/*
+	t
+*/
+
+btn.onclick = function(){
+	t++;
+	var val = Tween["backOut"](t, b, c, d);
+	//console.log(val);
+
+	box.style.left = val + "px";
+};
+</script>	
+</body>
+</html>

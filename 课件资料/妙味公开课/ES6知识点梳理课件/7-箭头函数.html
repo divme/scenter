@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+
+			
+			function fn(){
+					
+			}
+
+			// 箭头函数 =>    左边是参数 => 右边返回值
+
+			let func = n => n;
+			console.log(func(1));
+
+			let func2 = (n,m) => n+m;
+			console.log(func2(1,1));
+
+			let func3 = (n,m) => ({resut: n+m});
+			console.log(func3(1,1));
+
+			let func4 = (n,m) => {
+				if(n < 0){
+					return;
+				}
+				return n+m;
+			};
+			console.log(func4(1,1));
+
+			document.onclick =  () => {
+				console.log(this);
+				/*let that = this;
+				setTimeout(function (){
+					console.log(that);	
+				},1000)*/
+				setTimeout(() => {
+					console.log(this);	
+				},1000)
+			};
+
+
+
+		</script>
+	</head>
+
+	<body>
+		
+	</body>
+</html>

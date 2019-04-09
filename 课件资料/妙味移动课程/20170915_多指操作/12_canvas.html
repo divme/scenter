@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<style type="text/css">
+body {
+	margin: 0;
+}
+#c {
+	display: block;
+	background: #ccc;
+}	
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script type="text/javascript">
+(function(){
+	var c = document.querySelector('#c');
+	var html = document.documentElement;
+	var htmlW = html.clientWidth;
+	var htmlH = html.clientHeight;
+	c.width = htmlW;
+	c.height = htmlH;
+	// 绘图环境
+	var cxt = c.getContext("2d");
+	// fillRect(x,y,w,h);
+	cxt.fillRect(0,0,200,200);
+	//清除画布clearRect(x,y,w,h);
+	cxt.clearRect(0,0,c.width,c.height);
+	cxt.fillRect(100,100,200,200);
+})();	
+</script>
+</body>
+</html>

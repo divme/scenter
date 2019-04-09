@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<script type="text/javascript" src="js/m.touch.js"></script>
+<style type="text/css">
+#box {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -30px 0 0 -30px;
+	width: 60px;
+	height: 60px;
+	background: red;
+}	
+</style>
+</head>
+<body>
+<div id="box"></div>
+<script type="text/javascript">
+var box = document.querySelector('#box');
+css(box,"translateX",0);
+window.addEventListener('devicemotion', function(e) {
+	var motion = e.accelerationIncludingGravity;//重力加速度对象
+	var x = motion.x;
+	var nowX = css(box,"translateX");
+	nowX -= x;
+	css(box,"translateX",nowX);
+
+});	
+addMotion(function(e){
+	var motion = e.accelerationIncludingGravity;
+	var x = Math.round(motion.x);//x方向加速度
+	var y = Math.round(motion.y);//y方向加速度 
+	var z = Math.round(motion.z);//z方向加速度
+	box.innerHTML = "x:"+x;
+	box.innerHTML += "<br/>y:"+y;
+	box.innerHTML += "<br/>z:"+z;
+});
+function addMotion(callBack){
+	window.addEventListener('devicemotion', function(e) {
+		if(!getIos()){
+			e.accelerationIncludingGravity.x = -e.accelerationIncludingGravity.x;
+			e.accelerationIncludingGravity.y = -e.accelerationIncludingGravity.y;
+			e.accelerationIncludingGravity.z = -e.accelerationIncludingGravity.z;
+		}
+		callBack&&callBack(e);
+	});
+}
+</script>	
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			
+		</style>
+		<script>
+			
+
+
+
+		</script>
+	</head>
+
+	<body>
+		<ul id="list">
+			<li>123</li>
+		</ul>
+		<script>
+			/*
+				this
+					全局 this => window
+					函数中 this => 
+
+					函数在哪里被调用了，函数调用决定this的值
+					1. 直接调用 		this => window
+					2. 事件调用 		this =>触发事件的元素
+					3. 定时器调用 		this => window
+					4. new调用函数 		this => 内部创建的隐式对象
+					5. 对象调用函数 		this => 调用函数的对象
+
+				改变函数this指向：
+					1. call   直接调用了函数
+					2. apply  直接调用了函数
+
+					3. bind 不会直接调用了函数
+
+			*/
+
+			function fn(){
+				console.log(this);
+			}
+
+			fn.call([1,2,3]);
+			fn.apply({a:1});
+
+			var f = fn.bind([4,5,6]);  // 返回新函数
+
+			f();
+
+
+			/*function fn(){
+				console.log(this);
+			}
+
+			var obj = {
+				a:fn
+			}
+
+			obj.a()*/
+
+
+		</script>
+	</body>
+</html>

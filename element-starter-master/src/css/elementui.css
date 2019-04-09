@@ -1,0 +1,8 @@
+.el-button--primary{
+    background: #1155c6;
+    border-color: #1155c6;
+}
+.el-button--primary:focus, .el-button--primary:hover{
+    background: #1111c2;
+    border-color: #1111c2;
+}

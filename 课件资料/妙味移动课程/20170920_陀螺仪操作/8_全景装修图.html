@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<style type="text/css">
+.wrap {
+	position: fixed;
+
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	perspective: 900px;	
+}
+.box3D,
+.viewZ,
+.box {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+}
+.box span {
+	position: absolute;
+	left: 0;
+	top: 0;
+	margin: -512px 0 0 -512px;
+	width: 1024px;
+	height: 1024px;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+</style>
+<script type="text/javascript" src="js/m.touch.js"></script>
+</head>
+<body>
+<div class="wrap">
+	<div class="box3D">
+		<div class="viewZ">
+			<div class="box">
+				<span><img src="img/neg-x.png"></span>
+				<span><img src="img/pos-z.png"></span>
+				<span><img src="img/pos-x.png"></span>
+				<span><img src="img/neg-z.png"></span>
+				<span><img src="img/pos-y.png"></span>
+				<span><img src="img/neg-y.png"></span>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+(function(){
+	var box = document.querySelector('.box');
+	var spans = box.querySelectorAll('span');
+	for(var i = 0; i < 4; i++){
+		css(spans[i],"rotateY",-i*90);
+		css(spans[i],"translateZ",-510);
+	}
+	css(spans[4],"rotateX",-90);
+	css(spans[4],"translateZ",-510);
+	css(spans[5],"rotateX",90);
+	css(spans[5],"translateZ",-510);
+})();
+/* 3d适配 */	
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var box3D = document.querySelector('.box3D');
+	var viewZ = document.querySelector('.viewZ');
+	var deg = 52.5;
+	var	Z = Math.tan(deg/180*Math.PI) * (wrap.clientHeight/2);
+	//console.log(Z);
+	wrap.style.perspective = wrap.style.WebkitPerspective = Z +"px";
+	css(box3D,"translateZ",Z);
+	css(viewZ,"translateZ",-160);
+})();
+/* 根据脱落仪角度的变换，来旋转整个立方体 */
+(function(){
+	var box = document.querySelector('.box');
+	window.addEventListener('deviceorientation', function(e) {
+	var x = e.beta; 
+	var y = e.gamma;
+	var z = e.alpha;
+	var rotateX = x - 90;
+	var rotateY = (y+z)%360;
+	css(box,"rotateX",rotateX);
+	css(box,"rotateY",rotateY); 
+});	
+})();
+</script>
+</body>
+</html>

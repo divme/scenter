@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+html,
+body {
+	margin: 0;
+	height: 100%;
+}
+.page {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}	
+header {
+	height: 40px;
+	background: #000;
+	font: 16px/40px "宋体";
+	color: #fff;
+	text-align: center;
+}
+.wrap {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 40px;
+	bottom: 0;
+}
+.list {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+}
+.list li {
+	font: 14px/34px "宋体";
+	border-bottom: 1px solid #000;
+	text-indent: 2em;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<header>妙味滑屏</header>
+	<div class="wrap">
+		<ul class="list"></ul>
+	</div>	
+</div>	
+<script type="text/javascript">
+/* 页面结构 */
+(function(){
+	var list = document.querySelector('.list');
+	var inner= "";
+	for(var i = 0; i < 100; i++){
+		inner += "<li>这是第"+i+"个li</li>"
+	}
+	list.innerHTML = inner;
+})();	
+/* 滑屏操作 */
+/*
+	1. 按下时 获取 元素坐标 和 手指坐标
+	2. move时 获取手指坐标
+	3. 用 move的手指 - start时的手指坐标 = 手指移动距离
+	4. start时元素坐标 +  手指移动距离 = 元素的当前距离
+*/
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var scroll = wrap.querySelector('ul');
+	var startPoint = 0; //按下时的手指坐标
+	var startEl = 0; //按下时的元素坐标
+	wrap.addEventListener('touchstart', function(e) {
+		startPoint = e.changedTouches[0].pageY;
+		startEl = css(scroll,"top");
+	});
+	wrap.addEventListener('touchmove', function(e) {
+		var nowPoint = e.changedTouches[0].pageY;
+		var pointDis = nowPoint - startPoint;
+		//console.log(pointDis + startEl);
+		css(scroll,"top",pointDis + startEl);
+	});
+})();
+
+//获取或者设置元素的样式
+function css(el,attr,val){
+	if(val === undefined){ //当val为空的时候，就是获取样式
+		val = getComputedStyle(el)[attr];
+		val = parseFloat(val);
+		return val;
+	}
+	el.style[attr] = val + "px";
+}
+</script>
+</body>
+</html>

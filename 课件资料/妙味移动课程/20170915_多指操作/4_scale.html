@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+#box {
+	width: 200px;
+	height: 200px;
+	background: red;
+	font-size: 20px;
+	color: #fff;
+}	
+</style>
+</head>
+<body>
+<div id="box"></div>
+<script type="text/javascript">
+document.addEventListener('touchstart', function(e) {
+	e.preventDefault();
+});
+(function(){
+	var box = document.querySelector('#box');
+	gesture({
+		el:box,
+		start: function(){
+			this.style.background = "blue";
+		},
+		change: function(e){
+			this.innerHTML = e.scale;
+		},
+		end: function(){
+			this.style.background = "red";
+			//this.innerHTML = "";
+		}
+	});
+	/*
+		gesturestart 手指触碰元素时在屏幕上有两根或者两根以上手指
+
+		gesturechange 当触发了gesturestart，两根手指的发生变化 
+
+		gestureend 多指触碰结束
+
+		在安卓下 没有手势(gesture)事件
+
+
+		封装我们自己的手势操作
+	*/
+})();	
+/*
+	init:{
+		el: 要添加事件的元素,
+		start: 摁下时 要操作的事情(gesturestart),
+		change: 手指移动时的回调(gesturechange)function(e){
+			e.scale//在change时，手指之间的距离 和 start时手指之间距离的比值
+			e.rotation//在change时和start时 手指旋转角度的差值
+		},
+		end: 多指触碰结束的回调(gestureend)
+	}
+*/
+function gesture(init){
+	var isGesture = false;
+	var el = init.el;
+	var startDis = 0;
+	el.addEventListener('touchstart', function(e) {
+		var touch = e.touches;//当前屏幕上的手指列表
+		if(touch.length >= 2){//当前屏幕有两根以上的手指
+			isGesture = true;
+			startDis = getDis(touch[0],touch[1]);//start时两根手指之间的距离
+			init.start&&init.start.call(el,e);
+			//this.innerHTML = startDis;
+		}
+	});
+	el.addEventListener('touchmove', function(e) {
+		var touch = e.touches;//当前屏幕上的手指列表
+		if(touch.length >= 2&&isGesture){//当前屏幕有两根以上的手指
+			var nowDis = getDis(touch[0],touch[1]);// move时两根手指之间的距离
+			e.scale = nowDis/startDis;
+			init.change&&init.change.call(el,e);
+		}
+	});
+	el.addEventListener('touchend', function(e) {
+		if(isGesture){
+			init.end&&init.end.call(el,e);
+		}
+		isGesture = false;
+	});
+	function getDis(point,point2){
+		var x = point2.pageX - point.pageX;
+		var y = point2.pageY - point.pageY;
+		return Math.sqrt(x*x + y*y);
+	}
+}
+</script>
+</body>
+</html>

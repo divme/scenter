@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+body {
+	margin: 0;
+	background: #ccc;
+}	
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+img {
+	vertical-align: top;
+}
+body,
+html {
+	height: 100%;
+}
+.page {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+.scroll {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+}
+.wrap {
+	position: relative;
+	overflow: hidden;
+}
+.list {
+	overflow: hidden;
+}
+.list li {
+	float: left;
+}
+.list img {
+	width: 100%;
+}
+.nav {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	text-align: center;
+	height: 10px;
+}
+.nav a {
+	vertical-align: top;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background: #fff;
+}
+.nav .focus {
+	background: #6f0;
+}
+.textList li {
+	font: 16px/34px "宋体";
+	border-bottom: 1px solid #000;
+}
+.footer {
+	font: 16px/32px "宋体";
+	text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div class="scroll">
+		<div class="wrap">
+			<ul class="list">
+				<li>
+					<a href="#">
+						<img src="img/1.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/2.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/3.jpg">
+					</a>
+				</li>
+			</ul>
+			<nav class="nav">
+				<a href="javascript:;" class="focus"></a>
+				<a href="javascript:;"></a>
+				<a href="javascript:;"></a>
+			</nav>
+		</div>	
+		<ul class="textList"></ul>
+		<footer class="footer">正在加载更多数据……</footer>
+	</div>	
+</div>
+<script type="text/javascript" src="js/m.touch.js"></script>
+<script type="text/javascript">
+/* 列表的内容添加 */
+var data = [];
+for(var i = 0; i < 200; i++){
+	data.push("这是第"+i+"个li");
+}
+(function(){
+	var page = document.querySelector('.page');
+	var scroll = document.querySelector('.scroll');
+	var list = document.querySelector('.textList');
+	var length = 40;//每次请求40条数据
+	var pageNow = 0;//0 - 39  40 - 79 80 - 119
+	create();	
+	function create(){
+		var start = pageNow*length;
+		var end = start + length;
+
+		for(var i = start; i < end; i++){
+			var li = document.createElement("li");
+			li.innerHTML = data[i];
+			list.appendChild(li);
+			console.log(li);
+		}
+	}
+	swiperBar({
+		wrap: page,
+		dir: "y",
+		backOut: "out",
+		start: function(){
+			console.log("手指按下");
+		},
+		move: function(){
+			console.log("滚动中");
+		},
+		end: function(){
+			console.log("手指抬起");
+		},
+		over: function(){
+			//console.log("滑动结束");
+			var now = css(scroll,"translateY");
+			var min = page.clientHeight - list.offsetHeight;
+			console.log(now,min);
+			if(now <= min){
+				pageNow++;
+				setTimeout(function(){
+					create();
+				},500);
+				
+			}	
+		}
+	});
+})();
+/* 布局设置 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	list.innerHTML += list.innerHTML;//把整个列表复制一份准备用来 处理无缝 
+	list.style.width = imgs.length * wrap.clientWidth + "px";
+	for(var i = 0; i < imgs.length; i++){
+		imgs[i].style.width = wrap.clientWidth + "px";
+	}
+})();
+/* 幻灯片滑屏 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	var navs = document.querySelectorAll('.nav a');
+	var imgW = wrap.clientWidth;
+	var now = 0;
+	var timer = 0;
+	swiper({
+		wrap: wrap,
+		dir: "x",
+		start: function(){
+			clearInterval(timer);
+			list.style.transition = "none";
+			var nowX = css(list,"translateX");
+			now = Math.round(Math.abs(nowX/imgW));
+			if(now == 0){
+				now = imgs.length/2;
+			} else if (now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+			}		
+			var targetX = -now*imgW;
+			css(list,"translateX",targetX);
+		},
+		end: function(){
+			cancelAnimationFrame(list.timer);
+			var nowX = css(list,"translateX");//获取当前移动的距离
+			now = Math.round(Math.abs(nowX/imgW));//根据当前移动的距离 计算出 应该停在第几张
+			var targetX = -now*imgW; //根据当前要停在第几张，计算出  移动的距离
+			//console.log(targetX);
+			list.style.transition = ".3s";
+			css(list,"translateX",targetX);
+			for (var i = 0; i < navs.length; i++) {
+				navs[i].className = "";
+			}
+			//console.log(now);
+			navs[now%navs.length].className = "focus";
+			//auto();
+		}
+	});
+	auto();
+	/* 自动播放 */
+	function auto(){
+		timer = setInterval(function(){
+			/*判断走到最后一张快走过界了,拉到第一组最后一张 */
+			if(now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+				list.style.transition = "none";
+				css(list,"translateX",-now*imgW);
+			}	
+
+			/* 走到下一张*/
+			now++;
+			setTimeout(function(){
+				list.style.transition = ".3s";
+				css(list,"translateX",-now*imgW);
+			},50);	
+			for (var i = 0; i < navs.length; i++) {
+					navs[i].className = "";
+			}
+			navs[now%navs.length].className = "focus";
+		},3000);
+	}
+})();
+</script>
+</body>
+</html>

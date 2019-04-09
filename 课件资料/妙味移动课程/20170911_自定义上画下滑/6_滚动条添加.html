@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+body {
+	margin: 0;
+	background: #ccc;
+}	
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+img {
+	vertical-align: top;
+}
+body,
+html {
+	height: 100%;
+}
+.page {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+.scroll {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+}
+.wrap {
+	position: relative;
+	overflow: hidden;
+}
+.list {
+	overflow: hidden;
+}
+.list li {
+	float: left;
+}
+.list img {
+	width: 100%;
+}
+.nav {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	text-align: center;
+	height: 10px;
+}
+.nav a {
+	vertical-align: top;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	background: #fff;
+}
+.nav .focus {
+	background: #6f0;
+}
+.textList li {
+	font: 16px/34px "宋体";
+	border-bottom: 1px solid #000;
+}
+</style>
+</head>
+<body>
+<div class="page">
+	<div class="scroll">
+		<div class="wrap">
+			<ul class="list">
+				<li>
+					<a href="#">
+						<img src="img/1.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/2.jpg">
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="img/3.jpg">
+					</a>
+				</li>
+			</ul>
+			<nav class="nav">
+				<a href="javascript:;" class="focus"></a>
+				<a href="javascript:;"></a>
+				<a href="javascript:;"></a>
+			</nav>
+		</div>	
+		<ul class="textList"></ul>
+	</div>	
+</div>
+<script type="text/javascript" src="js/m.touch.js"></script>
+<script type="text/javascript">
+/* 列表的内容添加 */
+(function(){
+	var page = document.querySelector('.page');
+	var list = document.querySelector('.textList');
+	var inner = "";
+	for(var i = 0; i < 100; i++){
+		inner += "<li>这是第"+i+"个li</li>"
+	}
+	list.innerHTML = inner;
+	swiperBar({
+		wrap: page,
+		dir: "y",
+		backOut: "out",
+		start: function(){
+			console.log("手指按下");
+		},
+		move: function(){
+			console.log("滚动中");
+		},
+		end: function(){
+			console.log("手指抬起");
+		},
+		over: function(){
+			console.log("滑动结束");	
+		}
+	});
+})();
+function swiperBar(init){
+	var wrap = init.wrap;
+	var scroll = init.wrap.children[0];
+	var dir = init.dir;
+	var bar = document.createElement("span");
+	var scale = 1;
+	//console.log(wrap,scroll);
+	var dirTranslate = {
+		x: "translateX",
+		y: "translateY"
+	};
+	bar.className = "scrollBar";
+	bar.style.cssText = "position:absolute;background:rgba(0, 0, 0, .6);border-radius:3px;opacity:0;transition:.3s opacity;";	
+	if(dir == "x") {
+		scale = wrap.clientWidth/scroll.offsetWidth;
+		bar.style.cssText += "left:0;bottom:0;height:6px;";
+		bar.style.width = scale * wrap.clientWidth + "px";
+	} else if(dir == "y") {
+		//console.log(wrap.clientHeight,css(scroll,"height"));
+		scale = wrap.clientHeight/scroll.offsetHeight;
+		bar.style.cssText += "right:0;top:0;width:6px;";
+		bar.style.height = scale * wrap.clientHeight + "px";
+	}
+	wrap.appendChild(bar);
+	swiper({
+		wrap: wrap,
+		dir: dir,
+		backOut:init.backOut,
+		start: function(e){
+			resetScale();
+			init.start&&init.start.call(wrap,e);
+		},
+		move: function(e){
+			if(css(bar,"opacity") == 0){
+				css(bar,"opacity",1);
+			}
+			var now = css(scroll,dirTranslate[dir]);
+			css(bar,dirTranslate[dir],-now*scale);
+			init.move&&init.move.call(wrap,e);
+		},
+		end: function(e){
+			init.end&&init.end.call(wrap,e);
+		},
+		over: function(e){
+			init.over&&init.over.call(wrap,e);
+		}
+	});
+	function resetScale(){
+		if(dir == "x") {
+			scale = wrap.clientWidth/scroll.offsetWidth;
+			bar.style.width = scale * wrap.clientWidth + "px";
+		} else if(dir == "y") {
+			scale = wrap.clientHeight/scroll.offsetHeight;
+			bar.style.height = scale * wrap.clientHeight + "px";
+		}
+		var now = css(scroll,dirTranslate[dir]);
+		css(bar,dirTranslate[dir],-now*scale);
+	}
+}
+
+/* 布局设置 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	list.innerHTML += list.innerHTML;//把整个列表复制一份准备用来 处理无缝 
+	list.style.width = imgs.length * wrap.clientWidth + "px";
+	for(var i = 0; i < imgs.length; i++){
+		imgs[i].style.width = wrap.clientWidth + "px";
+	}
+})();
+/* 幻灯片滑屏 */
+(function(){
+	var wrap = document.querySelector('.wrap');
+	var list = document.querySelector('.list');
+	var imgs = list.children;
+	var navs = document.querySelectorAll('.nav a');
+	var imgW = wrap.clientWidth;
+	var now = 0;
+	var timer = 0;
+	swiper({
+		wrap: wrap,
+		dir: "x",
+		start: function(){
+			clearInterval(timer);
+			list.style.transition = "none";
+			var nowX = css(list,"translateX");
+			now = Math.round(Math.abs(nowX/imgW));
+			if(now == 0){
+				now = imgs.length/2;
+			} else if (now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+			}		
+			var targetX = -now*imgW	
+			css(list,"translateX",targetX);
+		},
+		end: function(){
+			cancelAnimationFrame(list.timer);
+			var nowX = css(list,"translateX");//获取当前移动的距离
+			now = Math.round(Math.abs(nowX/imgW));//根据当前移动的距离 计算出 应该停在第几张
+			var targetX = -now*imgW //根据当前要停在第几张，计算出  移动的距离
+			//console.log(targetX);
+			list.style.transition = ".3s";
+			css(list,"translateX",targetX);
+			for (var i = 0; i < navs.length; i++) {
+				navs[i].className = "";
+			}
+			//console.log(now);
+			navs[now%navs.length].className = "focus";
+			//auto();
+		}
+	});
+	//auto();
+	/* 自动播放 */
+	function auto(){
+		timer = setInterval(function(){
+			/*判断走到最后一张快走过界了,拉到第一组最后一张 */
+			if(now == imgs.length - 1){
+				now = imgs.length/2 - 1;
+				list.style.transition = "none";
+				css(list,"translateX",-now*imgW);
+			}	
+
+
+			/* 走到下一张*/
+			now++;
+			setTimeout(function(){
+				list.style.transition = ".3s";
+				css(list,"translateX",-now*imgW);
+			},50);	
+			for (var i = 0; i < navs.length; i++) {
+					navs[i].className = "";
+			}
+			navs[now%navs.length].className = "focus";
+		},3000);
+	}
+})();
+</script>
+</body>
+</html>

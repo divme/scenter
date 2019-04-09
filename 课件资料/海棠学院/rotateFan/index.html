@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			body{
+				margin: 0;
+				overflow-x: hidden;	/*横向会出现滚动条*/
+				font-size: 0;		/*底部会出现空白*/
+			}
+			ul{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			img{
+				vertical-align: middle;
+			}
+			#canvas{
+				background: #000;
+			}
+			#nav{
+				width: 130px;
+				height: 400px;
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+			}
+			#nav li{
+				position: absolute;
+				left: 0;
+				top: 0;
+				transform-origin: 25px 375px;
+				box-shadow: 2px 2px 20px #000;
+				transition: 1s;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="" height=""></canvas>
+		<ul id="nav">
+			<li><img src="images/img1.png" alt="" /></li>
+			<li><img src="images/img2.png" alt="" /></li>
+			<li><img src="images/img3.png" alt="" /></li>
+			<li><img src="images/img4.png" alt="" /></li>
+			<li><img src="images/img5.png" alt="" /></li>
+			<li><img src="images/img6.png" alt="" /></li>
+			<li><img src="images/img7.png" alt="" /></li>
+			<li><img src="images/img8.png" alt="" /></li>
+			<li><img src="images/img9.png" alt="" /></li>
+			<li><img src="images/img10.png" alt="" /></li>
+			<li><img src="images/img11.png" alt="" /></li>
+			<li><img src="images/img12.png" alt="" /></li>
+		</ul>
+		<script>
+			/*
+			 * 讲师：陈学辉
+			 * QQ：356985332
+			 * 微信：kaivon
+			 */
+			var lis=document.querySelectorAll("li");
+			
+			//封面点击功能
+			var clicked=true;	//用来决定封面是否是首次点击，是（true），否（false）
+			lis[lis.length-1].onclick=function(){
+				/*
+				 * 1、首次点击，打开扇形（扇页各自转了n*15deg）
+				 * 2、再次点击，合上扇形（扇页各自转了360deg）
+				 */
+				
+				/*
+				 * 每个扇页旋转的度数（间隔15deg）
+				 * i		0	1	2	3	4	5	6	7	8	9	10	11
+				 * n		-6	-5	-4	-3	-2	-1	0	1	2	3	4	5
+				 * deg		-90	-75	-60	-45	-30	-15	0	15	30	45	60	75
+				 */
+				
+				for(var i=0;i<lis.length;i++){
+					//lis[i]
+					var n=Math.ceil(i-lis.length/2);	//这个值为从i变到deg的中介，如果除不尽的话会有小数，所以向上取个整
+					
+					/*if(clicked){
+						n*=15;
+					}else{
+						n=360;
+					}
+					*/
+					n=clicked?n*15:360;
+					
+					lis[i].style.transform='rotate('+n+'deg)';
+				}
+				clicked=!clicked;
+			};
+			
+			//扇页点击功能(循环的时候不包含首页)
+			for(var i=0;i<lis.length-1;i++){
+				lis[i].index=i;
+				lis[i].onclick=function(){
+					/*
+					 * 1、点击的那张图片要转到0deg
+					 * 2、以点击的图片度数为准
+					 * 		1、左边所有的图片依次减去15deg
+					 * 		2、右边所有的图片依次加上15deg(紧挨着的那个图片要加上30deg)
+					 */
+					
+					this.style.transform='rotate(0deg)';
+					
+					//点击左边的所有图片
+					var leftDeg=0;		//左边度数初始值
+					for(var i=this.index-1;i>=0;i--){
+						lis[i].style.transform='rotate('+(leftDeg-=15)+'deg)';
+					}
+					
+					//点击右边的所有图片
+					var rightDeg=15;		//右边度数初始值
+					for(var i=this.index+1;i<lis.length;i++){
+						lis[i].style.transform='rotate('+(rightDeg+=15)+'deg)';
+					}
+				};
+			}
+			
+			
+			//canvas气泡功能，改变cavas的宽高（注意：不能通过样式修改）
+			var canvas=document.getElementById("canvas");
+			canvas.width=window.innerWidth;
+			canvas.height=window.innerHeight+400;
+			var context=canvas.getContext('2d');
+			var balls=[];		//放所有的气泡
+			var colors=['#69D2E7','#A7DBD8','#E0E4CC','#F38630','#FA6900','#FF4E50','#F9D423'];	//颜色
+			var timer;
+			
+			/*
+			 * 气泡的特点
+			 * 	1、半径不同
+			 * 	2、颜色不同
+			 * 	3、位置不同
+			 * 	4、速度不同
+			 * 
+			 * var ball={
+			 *		x:x轴的位置,
+			 * 		y:y轴的位置,
+			 * 		r:圆的半径,
+			 * 		vx:x轴的速度,
+			 * 		vy:y轴的速度,
+			 * 		color:颜色
+			 * }
+			 * 
+			 * 角度转弧度
+			 * 		角度*π/180
+			 * 		360=360*π/180=2*π
+			 */
+			
+			//在canvas上画个圆
+			function draw(ball){
+				context.beginPath();
+				context.arc(ball.x,ball.y,ball.r,0,2*Math.PI);
+				context.fillStyle=ball.color;
+				context.globalCompositeOperation='lighter';	//颜色为所有重叠圆的颜色合在一起的颜色
+				context.fill();
+			}
+			/*draw({
+					x:200,
+					y:200,
+					r:100,
+					color:'green'
+				});*/
+				
+			//取两个数之间的随机数：Math.round(Math.random()*(y-x)+x);
+			function random(min,max){
+				return Math.round(Math.random()*(max-min)+min);
+			}
+			//console.log(random(10,20));
+			
+			
+			//给canvas添加移动事件
+			var on=true;		//用来只开启一次定时器
+			canvas.onmousemove=function(ev){
+				/*
+				 * 鼠标移动的时候要做的事情
+				 * 	1、创建气泡对象
+				 * 		1、把气泡对象放在数组里
+				 * 		2、由于mousemove事件是根据浏览器频率决定发生次数，所以在移动的时候只需创建2个气泡就够了
+				 * 		3、气泡的各种属性都是随机的
+				 * 	2、通过定时器不断的画气泡
+				 * 		1、气泡的速度要不断的加
+				 * 		2、气泡的半径要不断的减
+				 */
+				
+				//1、创建气泡对象
+				for(var i=0;i<2;i++){
+					var ball={
+						x:random(-5,5)+ev.clientX,
+						y:random(-5,5)+ev.clientY,
+						r:random(10,45),
+						vx:Math.random()-0.5,		//速度的初始值
+						vy:Math.random()-0.5,
+						color:colors[random(0,colors.length-1)]
+					};
+					
+					balls.push(ball);
+					
+					//console.log(balls);
+					
+					//drallBall();
+				}
+				
+				if(on){
+					timer=setInterval(drallBall,30);
+					on=false;
+				}
+			};
+			
+			//把所有的气泡都画在画布上，并让气泡动起来
+			function drallBall(){
+				context.clearRect(0,0,canvas.width,canvas.height);	//让气泡动起来
+				
+				for(var i=0;i<balls.length;i++){
+					balls[i].x+=balls[i].vx*8;
+					balls[i].y+=balls[i].vy*8;
+					balls[i].r*=0.94;
+					
+					if(balls[i].r<1){
+						balls.splice(i,1);
+						continue;		//如果说这个气泡在数组里删掉了，那下面画气泡的代码就不用走了
+					}
+					
+					draw(balls[i]);
+				}
+				
+				
+				if(!balls.length){
+					clearInterval(timer);
+					on=true;	//为了下次再移动的时候，定时器还能开启
+				}
+				
+				console.log(balls.length);
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<meta charset="UTF-8">
+<title>Document</title>
+</head>
+<body>
+<!--
+	处理滑屏误触最直白的办法莫过于自定义tap事件
+-->
+
+<div class="page">
+<ul class="list">
+</ul>
+</div>	
+<script type="text/javascript">
+function fn(a,b){
+	console.log(this);
+	console.log(a+b);
+}
+fn.call(document,1,2);
+/*
+	call第0个参数代表的是 函数执行时的this的指向
+	从第1个参数开始 就是正常函数传参
+	call第1个参数 对应函数中的第0个参数
+*/
+</script>
+	
+</body>
+</html>

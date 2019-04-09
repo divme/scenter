@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style type="text/css">
+#box {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100px;
+	height: 100px;
+	background: red;
+	transition: 1s;
+}	
+</style>
+</head>
+<body>
+<div id="box"></div>
+<script type="text/javascript">
+(function(){
+	var box = document.querySelector('#box');
+	box.onclick = function(){
+		if(box.offsetLeft == 0){
+			box.style.left = "300px";
+		} else {
+			//元素渲染的速度 要大于 代码执行速度
+			box.style.transition = "none";
+			box.style.left = "0";//30ms
+			setTimeout(function(){
+				box.style.transition = "1s";
+				box.style.left = "300px"; 
+			},50);
+			
+		}
+	};
+})();	
+</script>
+</body>
+</html>

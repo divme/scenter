@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<title>Document</title>
+<style>
+#box {
+	width: 200px;
+	height: 200px;
+	background: red;
+}
+</style>
+</head>
+<body>
+<div id="box"></div>
+<script type="text/javascript">
+/*
+	移动端同样也支持 mouse事件
+	但是mouse事件 在移动端的执行会有300ms左右的一个延迟
+*/
+(function(){
+	var box = document.querySelector('#box');
+	box.addEventListener('mousedown', function(e) {
+		console.log(1);
+	});
+	box.addEventListener('touchstart', function(e) {
+		console.log(2);
+	});
+})();
+</script>
+</body>
+</html>

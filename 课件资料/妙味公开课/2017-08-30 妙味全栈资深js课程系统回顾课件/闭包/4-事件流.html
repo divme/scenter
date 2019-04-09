@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+		<style>
+			ul li {
+				list-style: none;
+				background: pink;
+				margin: 20px;
+			}
+		</style>
+		<script>
+			
+			
+
+		</script>
+	</head>
+
+	<body>
+		<div id="box">
+			<input type="button" id="btn" value="给所有li绑定事件" />
+		</div>
+		<hr />
+		<script>
+			var btn = document.getElementById('btn');
+			var box = document.getElementById('box');
+			btn.onclick = function (){
+				console.log("btn");
+			}
+
+			box.onclick = function (){
+				console.log("box");
+			}
+
+		</script>
+	</body>
+</html>

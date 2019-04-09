@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,user-scalable=no" />
+<title>Document</title>
+<style type="text/css">
+	input {
+		width: 90%;
+		height: 50px;
+	}
+</style>
+</head>
+<body>
+<div class="page">
+<img src="img/img.jpg" />
+<input type="text" name="">
+<ul class="list">
+</ul>
+</div>	
+<script type="text/javascript">
+var inner = "";
+var list = document.querySelector('.list');
+var input = document.querySelector('input');
+for(var i = 0; i < 50; i++){
+	inner += "<li>这是第"+i+"个li</li>";
+}	
+list.innerHTML = inner;
+var page = document.querySelector('.page');
+page.addEventListener('touchstart', function(e) {
+	e.preventDefault();
+});
+// input.addEventListener('touchstart', function(e) {
+// 	this.focus();
+// });
+/* 最好的解决办法，跳转到一个新页面去，然后让用在新的页面进行输入 */
+</script>
+</body>
+</html>

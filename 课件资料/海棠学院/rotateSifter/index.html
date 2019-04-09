@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			body{
+				background: #1d1f20;
+			}
+			#wrap{
+				width: 200px;
+				margin: 300px auto 0 auto;
+				
+				perspective: 1000px;
+			}
+			.box{
+				width: 200px;
+				height: 200px;
+				transform-style: preserve-3d;
+				position: relative;
+				
+				transform: rotateX(-20deg) rotateY(-20deg) rotateZ(0deg);
+			}
+			
+			.box>div{
+				width: 	200px;
+				height: 200px;
+				padding: 20px;
+				box-sizing: border-box;
+				box-shadow: 0 0 10px #bbb;
+				background: #E7E7E7;
+				border-radius: 5%;
+				position: absolute;
+				display: flex;
+				opacity: 0;
+			}
+			.box span{
+				display: block;
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				background: #D82828;
+				box-shadow: inset 0 5px #B60505,inset 0 -5px #FA5D5D;
+			}
+			
+			.one{
+				justify-content: center;
+				align-items: center;
+				
+				transform: rotateY(90deg) translateZ(300px);
+			}
+			
+			.two{
+				justify-content: space-between;	
+				
+				transform: rotateY(0deg) translateZ(-300px);
+			}
+			.two span:last-child{
+				align-self: flex-end;
+			}
+			
+			.three{
+				justify-content: space-between;
+				
+				transform: rotateY(90deg) translateZ(-300px);
+			}
+			.three span:nth-child(2){
+				align-self: center;
+			}
+			.three span:nth-child(3){
+				align-self: flex-end;
+			}
+			
+			.four{
+				justify-content: space-between;
+				
+				transform: rotateY(0deg) translateZ(300px);
+			}
+			.four div{
+				display: flex;
+				flex-wrap: wrap;
+				flex: 0 0;
+				align-content: space-between;
+			}
+			
+			.five{
+				justify-content: space-between;
+				
+				transform: rotateX(90deg) translateZ(-300px);
+			}
+			.five div{
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+			.five div:nth-child(2){
+				justify-content: center;
+			}
+			
+			.six{
+				justify-content: space-between;
+				
+				transform: rotateX(90deg) translateZ(300px);
+			}
+			.six div{
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+			@keyframes move{
+				100%{
+					transform: rotateX(340deg) rotateY(340deg) rotateZ(360deg);
+				}
+			}
+		</style>
+		<script>
+			/*
+			 * 讲师：陈学辉
+			 * QQ：356985332
+			 * 微信：kaivon
+			 */
+			window.onload=function(){
+				var divs=document.querySelectorAll(".box>div");
+				var target=[{r:0,t:300},{r:-90,t:-300},{r:0,t:-300},{r:-90,t:300},{r:270,t:-300},{r:270,t:300}];
+				
+				for(var i=0;i<divs.length;i++){
+					(function(i){
+						var dir=i>=divs.length-2?'rotateX':'rotateY';
+						setTimeout(function(){
+							motion(divs[i],'.3s',function(){
+								this.style.transform=dir+'('+target[i].r+'deg) translateZ('+target[i].t+'px)';
+								this.style.opacity=1;
+							},function(){
+								if(i==divs.length-1){
+									//所有的运动都完了
+									setTimeout(function(){
+										for(var i=0;i<divs.length;i++){
+											var dir=i>=divs.length-2?'rotateX':'rotateY';
+											(function(i){
+												motion(divs[i],'.4s',function(){
+													this.style.transform=dir+'('+target[i].r+'deg) translateZ('+target[i].t/3+'px)';
+												},function(){
+													if(i==divs.length-1){
+														var box=document.querySelector(".box");
+														box.style.animation='10s move linear infinite';
+													}
+												});
+											})(i);
+										}
+									},300);
+								}
+							});
+						},i*270);
+					})(i);
+				}
+				
+				
+				
+				//运动函数
+				function motion(obj,time,doFn,callBack){
+					//运动（运动对象，运动时间（字符串），运动属性（函数），运动结束后要做的事情）
+					obj.style.transition=time;	//用transition做运动
+					doFn.call(obj);				//调用函数，并且把this指向运动对象
+					
+					var end=true;
+					//结束事件处理函数
+					function endFn(){
+						if(end){
+							callBack&&callBack.call(obj);
+							end=false;	//改为true后，下次再调用的话就不走if（保证只走一次）
+						}
+						
+						obj.removeEventListener('transitionend',endFn);	//结束后要把这个事件取消到，要不它会一直在身上
+					}
+					obj.addEventListener('transitionend',endFn);
+				}
+			};
+		</script>
+	</head>
+	<body>
+		<section id="wrap">
+			<section class="box">
+				<div class="one">
+					<span></span>
+				</div>
+				<div class="two">
+					<span></span>
+					<span></span>
+				</div>
+				<div class="three">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<div class="four">
+					<div>
+						<span></span>
+						<span></span>
+					</div>
+					<div>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div class="five">
+					<div>
+						<span></span>
+						<span></span>
+					</div>
+					<div>
+						<span></span>
+					</div>
+					<div>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div class="six">
+					<div>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+					<div>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+			</section>
+		</section>
+	</body>
+</html>
