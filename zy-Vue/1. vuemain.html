@@ -256,6 +256,7 @@
   <div id="app">
       <div>
           <!--<test v-for="item in stockdata"></test>-->
+          {{aaa}}
       </div>
 
       <div class="shortbox">
@@ -369,7 +370,8 @@
 
       var vm = new Vue({
           el: '#app',
-          data:function(){
+          data: function(){
+              this.aaa = 'ewew'
               return {
                   shortcuts: [
                       {
@@ -482,11 +484,12 @@
               }
           },
           a: 1,
-          b:2,
+          b: 2,
           created: function () {
               console.log(this.$options.a)
           }
       })
+
   </script>
 </body>
 </html>

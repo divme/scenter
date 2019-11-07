@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>指令式Vue</title>
@@ -43,10 +43,10 @@
     <table>
         <tr>
             <th>序号</th>
-            <th>商品名称</th>
-            <th>商品价格</th>
-            <th>购买数量</th>
-            <th>操作</th>
+            <th>{{obj.d}}</th>
+            <th>{{obj.a}}</th>
+            <th @click="change">购买数量</th>
+            <th>{{ b }}</th>
         </tr>
         <tr v-for="iphone in products">
             <td>{{ iphone.id }}</td>
@@ -68,6 +68,11 @@
     var app = new Vue({
         el: '#app',
         data: {
+            b: 3,
+            obj: {
+                a: 1,
+                c: 2
+            },
             products: [{
                     id: 1,
                     name: 'iphone 8',
@@ -89,6 +94,9 @@
 
         },
         methods:{
+            change() {
+              this.b = 3
+            },
             totalPrice : function(){
                 var totalP = 0;
                 for (var i = 0,len = this.products.length; i<len; i++) {
@@ -97,6 +105,18 @@
                 return totalP;
             }
         }
+    })
+    app.products[0]= {
+        id: '3321',
+        name: 'iphone 8',
+        price: 5099,
+        count: 1
+    }
+    app.$set(app.products, 0, {
+        id: '33ewew21',
+        name: 'iphone 8',
+        price: 5099,
+        count: 1
     })
 </script>
 </body>
